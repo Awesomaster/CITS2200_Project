@@ -3,6 +3,8 @@ public class MyCITS2200Project implements CITS2200Project {
 	int[][] dataSet;
 	String[] dictionary;
 	
+	//help me
+	
 	// Constructor for CITS project
 	public MyCITS2200Project() {
 		
