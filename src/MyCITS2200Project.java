@@ -1,5 +1,7 @@
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.stream.Stream;
@@ -13,10 +15,17 @@ public class MyCITS2200Project implements CITS2200Project {
 	
 	// Constructor for CITS project
 	public MyCITS2200Project(String filename) {
-		BufferedReader reader = new BufferedReader(new FileReader(filename));
-		
+		BufferedReader reader;
+		try {
+			reader = new BufferedReader(new FileReader(filename));
 			Stream<String> dict = reader.lines();
-			 dictionary = dict.distinct().toArray();
+			dictionary = (String[]) dict.distinct().toArray(String[]::new);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+			
 			
 
 		
