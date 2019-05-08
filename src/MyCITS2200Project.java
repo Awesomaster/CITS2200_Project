@@ -4,11 +4,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.stream.Stream;
+import java.util.Stream;
 
 public class MyCITS2200Project implements CITS2200Project {
 	String[] dictionary;
 	int[][] dataSet;
+	private Queue<String> list;
 	//String[] dictionary;
 	
 	//help me
@@ -19,7 +20,7 @@ public class MyCITS2200Project implements CITS2200Project {
 		try {
 			reader = new BufferedReader(new FileReader(filename));
 			Stream<String> dict = reader.lines();
-			dictionary = (String[]) dict.distinct().toArray(String[]::new);
+			dictionary = dict.distinct().toArray(String[]::new);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -55,8 +56,21 @@ public class MyCITS2200Project implements CITS2200Project {
 	@Override
 	public int getShortestPath(String urlFrom, String urlTo) {
 		// use breadth first search
+		int numberoflinks = 0;
+		list = new LinkedList<String>();
+		String[] parentv = new String[dictionary.length];
+		boolean[] visited = new boolean[dictionary.length];
 		
-		return 0;
+		for(int i = 0; i < dictionary.length; i++) {
+			parentv[i]= null;
+			visited[i]= false;
+		}
+	
+		visited[urlFrom] = true;
+		q.add(UrlFrom);
+		
+		
+		return numberoflinks;
 	}
 
 	@Override
