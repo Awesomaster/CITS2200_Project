@@ -57,10 +57,10 @@ public class MyCITS2200Project implements CITS2200Project {
 		// use breadth first search
 		int vertex1 = 0;
 		int vertex2 = 0;
-		int numberoflinks = 0;
 		list = new LinkedList<Integer>();
 		int[] parentv = new int[dictionary.length];
 		boolean[] visited = new boolean[dictionary.length];
+		int[] distances = new int[dictionary.length];
 		
 		//have to iterate through dictionary to find vertex 1 and 2?
 		for(int i = 0; i < dictionary.length; i++) {
@@ -73,23 +73,33 @@ public class MyCITS2200Project implements CITS2200Project {
 		}// maybe have else case throwing an exception if it urlFrom and urlTo are not in the dictionary
 		
 		for(int i = 0; i < dictionary.length; i++) {//can also probably use arrays fill function instead of this
-			parentv[i]= -1;
-			visited[i]= false;
+			parentv[i]= -1;//is parentv needed?
+			visited[i]= false;//not needed tbh
+			distances[i] = Integer.MAX_VALUE;
 		}
 	
 		visited[vertex1] = true;
+		distances[vertex1] = 0;
 		list.add(vertex1);
 		
 		while(!list.isEmpty()) {
 			Integer top = list.remove();
+			
 			int[] edges = dataSet[top];
 			for(int i = 0; i < edges.length; i++) {
 				if(edges[i] != 0 && !(visited[i])) {
+					if(distances[top]+1 < distances[i]) {
+				    distances[i] = distances[top]+1;
 					parentv[i] = top;
 					visited[i] = true;
 					list.add(i);
-					
-					
+					/**
+					 * if(i == vertex2){
+					 * return distances[vertex2];
+					 * }
+					 * does this makes sense?
+					 */
+					}
 				}
 			}
 			
@@ -98,7 +108,7 @@ public class MyCITS2200Project implements CITS2200Project {
 		
 		
 		
-		return numberoflinks;
+		return distances[vertex2];
 	}
 
 	@Override
