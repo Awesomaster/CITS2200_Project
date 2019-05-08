@@ -1,12 +1,25 @@
 
+import java.io.BufferedReader;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.stream.Stream;
+
 public class MyCITS2200Project implements CITS2200Project {
-	int[][] dataSet;
 	String[] dictionary;
+	int[][] dataSet;
+	//String[] dictionary;
 	
 	//help me
 	
 	// Constructor for CITS project
-	public MyCITS2200Project() {
+	public MyCITS2200Project(String filename) {
+		BufferedReader reader = new BufferedReader(new FileReader(filename));
+		
+			Stream<String> dict = reader.lines();
+			 dictionary = dict.distinct().toArray();
+			
+
+		
 		
 	}
 	
@@ -30,10 +43,10 @@ public class MyCITS2200Project implements CITS2200Project {
 			}
 		}
 	}
-
 	@Override
 	public int getShortestPath(String urlFrom, String urlTo) {
-		// TODO Auto-generated method stub
+		// use breadth first search
+		
 		return 0;
 	}
 
