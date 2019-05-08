@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Stream;
+import java.util.stream.Stream;
 
 public class MyCITS2200Project implements CITS2200Project {
 	String[] dictionary;
@@ -25,9 +25,7 @@ public class MyCITS2200Project implements CITS2200Project {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-			
-			
+
 
 		
 		
@@ -53,21 +51,36 @@ public class MyCITS2200Project implements CITS2200Project {
 			}
 		}
 	}
+	
 	@Override
 	public int getShortestPath(String urlFrom, String urlTo) {
 		// use breadth first search
+		int vertex1 = 0;
+		int vertex2 = 0;
 		int numberoflinks = 0;
 		list = new LinkedList<String>();
 		String[] parentv = new String[dictionary.length];
 		boolean[] visited = new boolean[dictionary.length];
+		
+		//have to iterate through dictionary to find vertex 1 and 2?
+		for(int i = 0; i < dictionary.length; i++) {
+			if(dictionary[i].equals(urlFrom)) {
+				vertex1 = i;
+			}
+			if(dictionary[i].equals(urlTo)) {
+				vertex2 = i;
+			}
+		}// maybe have else case throwing an exception if it urlFrom and urlTo are not in the dictionary
+		
 		
 		for(int i = 0; i < dictionary.length; i++) {
 			parentv[i]= null;
 			visited[i]= false;
 		}
 	
-		visited[urlFrom] = true;
-		q.add(UrlFrom);
+		visited[vertex1] = true;
+		list.add(urlFrom);
+		
 		
 		
 		return numberoflinks;
