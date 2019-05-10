@@ -1,5 +1,8 @@
 import java.io.*;
 import java.util.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+
 
 public class CITS2200ProjectTester {
 	public static void loadGraph(CITS2200Project project, String path) {
@@ -22,14 +25,21 @@ public class CITS2200ProjectTester {
 	
 		
 	}
-
+	public static void testShortestPath(CITS2200Project project) {
+		
+		assertEquals(2,project.getShortestPath("/wiki/Flow_network","/wiki/Minimum_cut"));
+		
+	}
+	
 	public static void main(String[] args) {
 		// Change this to be the path to the graph file.
-		String pathToGraphFile = "src/example_graph.txt";
+		String pathToGraphFile = "example_graph.txt";
 		// Create an instance of your implementation.
 		CITS2200Project proj = new MyCITS2200Project(pathToGraphFile);
 		// Load the graph into the project.
-		//loadGraph(proj, pathToGraphFile);
+		loadGraph(proj, pathToGraphFile);
+		
+		
 
 		// Write your own tests!
 	}
