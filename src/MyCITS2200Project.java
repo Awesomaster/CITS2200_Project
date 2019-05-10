@@ -13,21 +13,41 @@ public class MyCITS2200Project implements CITS2200Project {
 	int[][] dataSet;
 	private Queue<Integer> list;
 	//String[] dictionary;
+	LinkedList<String> listy;
 	
 	//help me
 	
 	// Constructor for CITS project
 	public MyCITS2200Project(String filename) {
+		dictLen = 0;
+		
 		BufferedReader reader;
+		listy = new LinkedList<String>();
 		try {
 			reader = new BufferedReader(new FileReader(filename));
-			Stream<String> dict = reader.lines();
-			dictLen += 1;
+			while (reader.ready()) {
+				String currentLine = reader.readLine();
+				if (!listy.contains(currentLine)) {
+					listy.add(currentLine);
+					dictLen += 1;
+				}
+			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
+		
+		int n = 0;
+		dictionary = new String[dictLen];
+		dataSet = new int[dictLen][dictLen];
+		while (!listy.isEmpty()) {
+			dictionary[n] = listy.pop();
+			n++;
+		}
+		
 		try {
 			reader = new BufferedReader(new FileReader(filename));
 			while (reader.ready()) {
@@ -43,7 +63,7 @@ public class MyCITS2200Project implements CITS2200Project {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		//System.out.println(dataSet);
 		// Now the graph should be constructed, but has it been done well?
 		
 	}
@@ -52,15 +72,19 @@ public class MyCITS2200Project implements CITS2200Project {
 	// should have total average time complexity dictionary.length
 	// should have total worst case time complexity 2(dictionary.length)-1s
 	public void addEdge(String urlFrom, String urlTo) {
-		
 		// !!!! for existing nodes !!!!
 		// should have dictionary.length/2 average time complexity
-		for (int i = 0; i < dictionary.length; i++) {
+		for (int i = 0; i < dictLen; i++) {
+			//System.out.println("fromDict "+dictionary[i]);
+			//System.out.println("fromUrl "+urlFrom);
 			if (dictionary[i].equals(urlFrom)) {
 				// should have dictionary.length/2 average time complexity
-				for (int j = 0; j < dictionary.length; j++) {
+				for (int j = 0; j < dictLen; j++) {
+					//System.out.println("toDict "+dictionary[j]);
+					//System.out.println("toUrl "+urlTo);
 					if (dictionary[j].equals(urlTo)) {
 						dataSet[i][j] = 1;
+						
 						break;
 					}
 				}
