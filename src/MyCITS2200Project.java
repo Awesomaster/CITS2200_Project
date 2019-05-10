@@ -2,12 +2,14 @@
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.stream.Stream;
 
 public class MyCITS2200Project implements CITS2200Project {
 	String[] dictionary;
+	int dictLen;
 	int[][] dataSet;
 	private Queue<Integer> list;
 	//String[] dictionary;
@@ -20,14 +22,29 @@ public class MyCITS2200Project implements CITS2200Project {
 		try {
 			reader = new BufferedReader(new FileReader(filename));
 			Stream<String> dict = reader.lines();
-			dictionary = dict.distinct().toArray(String[]::new);
+			dictLen += 1;
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-
+		try {
+			reader = new BufferedReader(new FileReader(filename));
+			while (reader.ready()) {
+				String from = reader.readLine();
+				String to = reader.readLine();
+				System.out.println("Adding edge from " + from + " to " + to);
+				addEdge(from, to);
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
+		// Now the graph should be constructed, but has it been done well?
 		
 	}
 	
@@ -58,7 +75,7 @@ public class MyCITS2200Project implements CITS2200Project {
 		int vertex1 = 0;
 		int vertex2 = 0;
 		list = new LinkedList<Integer>();
-		int[] parentv = new int[dictionary.length];
+		//int[] parentv = new int[dictionary.length];
 		boolean[] visited = new boolean[dictionary.length];
 		int[] distances = new int[dictionary.length];
 		
@@ -73,12 +90,12 @@ public class MyCITS2200Project implements CITS2200Project {
 		}// maybe have else case throwing an exception if it urlFrom and urlTo are not in the dictionary
 		
 		for(int i = 0; i < dictionary.length; i++) {//can also probably use arrays fill function instead of this
-			parentv[i]= -1;//is parentv needed?
+			//parentv[i]= -1;//is parentv needed?
 			visited[i]= false;//not needed tbh
 			distances[i] = Integer.MAX_VALUE;
 		}
 	
-		visited[vertex1] = true;
+		//visited[vertex1] = true;
 		distances[vertex1] = 0;
 		list.add(vertex1);
 		
@@ -90,7 +107,7 @@ public class MyCITS2200Project implements CITS2200Project {
 				if(edges[i] != 0 && !(visited[i])) {
 					if(distances[top]+1 < distances[i]) {
 				    distances[i] = distances[top]+1;
-					parentv[i] = top;
+					//parentv[i] = top;
 					visited[i] = true;
 					list.add(i);
 					/**
