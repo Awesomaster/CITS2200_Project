@@ -1,35 +1,43 @@
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 import java.util.stream.Stream;
 
 public class MyCITS2200Project implements CITS2200Project {
-	String[] dictionary;
-	int dictLen;
-	int[][] dataSet;
+	int numNodes;
+	LinkedList<Integer> adjList[];
+	HashMap<String, Integer> dictionary;
 	private Queue<Integer> list;
-	//String[] dictionary;
-	LinkedList<String> listy;
 	
 	//help me
 	
 	// Constructor for CITS project
 	public MyCITS2200Project(String filename) {
-		dictLen = 0;
+		numNodes = 0;
+		dictionary = new HashMap<String, Integer>();
+		adjList = new LinkedList<Integer>[];
 		
 		BufferedReader reader;
-		listy = new LinkedList<String>();
 		try {
 			reader = new BufferedReader(new FileReader(filename));
 			while (reader.ready()) {
 				String currentLine = reader.readLine();
-				if (!listy.contains(currentLine)) {
-					listy.add(currentLine);
-					dictLen += 1;
+				String nextLine = reader.readLine();
+				if (!dictionary.containsKey(currentLine)) {
+					if (!dictionary.containsKey(nextLine)) {
+						dictionary.put(nextLine, numNodes);
+						numNodes+=1;
+					}
+					dictionary.put(currentLine, numNodes);
+					
+					adjList[numNodes].add(dictionary.get(nextLine));
+					numNodes += 1;
+					
 				}
 			}
 		} catch (FileNotFoundException e) {
@@ -170,18 +178,18 @@ public class MyCITS2200Project implements CITS2200Project {
 		return null;
 	}
 	
-	/**
+	
 	public class GraphLink {
-		public String node;
-		public String[] connections;
+		public int node;
+		public int[] connections;
 		public GraphLink next;
 		
-		public GraphLink(String nod, String[] c, GraphLink n) {
+		public GraphLink(int nod, int[] c, GraphLink n) {
 			node = nod;
 			connections = c;
 			next = n;
 		} 
 		
 	}
-	**/
+	
 }
