@@ -166,8 +166,10 @@ public class MyCITS2200Project implements CITS2200Project {
 
 	@Override
 	public String[] getHamiltonianPath() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		String[] hamiltonpath = new String[dictionary.length];
+		
+		return hamiltonpath;
 	}
 	
 	/**

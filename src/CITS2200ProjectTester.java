@@ -37,7 +37,7 @@ public class CITS2200ProjectTester {
 		// Create an instance of your implementation.
 		CITS2200Project proj = new MyCITS2200Project(pathToGraphFile);
 		// Load the graph into the project.
-		loadGraph(proj, pathToGraphFile);
+		//loadGraph(proj, pathToGraphFile);
 		
 		
 
