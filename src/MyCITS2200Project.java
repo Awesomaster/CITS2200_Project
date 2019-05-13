@@ -1,95 +1,56 @@
-
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.stream.Stream;
 
 public class MyCITS2200Project implements CITS2200Project {
-	String[] dictionary;
-	int dictLen;
-	int[][] dataSet;
+	int numNodes;
+	LinkedList<Integer> adjList[];
+	HashMap<String, Integer> dictionary;
 	private Queue<Integer> list;
-	//String[] dictionary;
-	LinkedList<String> listy;
 	
 	//help me
 	
 	// Constructor for CITS project
+	@SuppressWarnings("unchecked")
 	public MyCITS2200Project(String filename) {
-		dictLen = 0;
-		
-		BufferedReader reader;
-		listy = new LinkedList<String>();
-		try {
-			reader = new BufferedReader(new FileReader(filename));
-			while (reader.ready()) {
-				String currentLine = reader.readLine();
-				if (!listy.contains(currentLine)) {
-					listy.add(currentLine);
-					dictLen += 1;
-				}
+		numNodes = 0;
+		dictionary = new HashMap<String, Integer>();
+		adjList = new LinkedList[16];
+	}
+	
+	private void addNode(String url) {
+		if (numNodes==adjList.length) {
+			// Could use System.arraycopy
+			@SuppressWarnings("unchecked")
+			LinkedList<Integer>[] tempAdjList = new LinkedList[adjList.length*2];
+			for (int i = 0; i < adjList.length; i++) {
+				tempAdjList[i] = adjList[i];
 			}
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		int n = 0;
-		dictionary = new String[dictLen];
-		dataSet = new int[dictLen][dictLen];
-		while (!listy.isEmpty()) {
-			dictionary[n] = listy.pop();
-			n++;
-		}
-		
-		try {
-			reader = new BufferedReader(new FileReader(filename));
-			while (reader.ready()) {
-				String from = reader.readLine();
-				String to = reader.readLine();
-				System.out.println("Adding edge from " + from + " to " + to);
-				addEdge(from, to);
-			}
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		//System.out.println(dataSet);
-		// Now the graph should be constructed, but has it been done well?
-		
+			LinkedList<Integer> edges = new LinkedList<Integer>();
+			tempAdjList[numNodes] = edges;
+			numNodes+=1;
+			adjList = tempAdjList;
+		} else {
+			LinkedList<Integer> edges = new LinkedList<Integer>();
+			adjList[numNodes] = edges;
+			numNodes+=1;
+		}	
 	}
 	
 	@Override
 	// should have total average time complexity dictionary.length
 	// should have total worst case time complexity 2(dictionary.length)-1s
 	public void addEdge(String urlFrom, String urlTo) {
-		// !!!! for existing nodes !!!!
-		// should have dictionary.length/2 average time complexity
-		for (int i = 0; i < dictLen; i++) {
-			//System.out.println("fromDict "+dictionary[i]);
-			//System.out.println("fromUrl "+urlFrom);
-			if (dictionary[i].equals(urlFrom)) {
-				// should have dictionary.length/2 average time complexity
-				for (int j = 0; j < dictLen; j++) {
-					//System.out.println("toDict "+dictionary[j]);
-					//System.out.println("toUrl "+urlTo);
-					if (dictionary[j].equals(urlTo)) {
-						dataSet[i][j] = 1;
-						
-						break;
-					}
-				}
-				break;
+		if (!dictionary.containsKey(urlFrom)) {
+			if (!dictionary.containsKey(urlTo)) {
+				dictionary.put(urlTo, numNodes);
+				addNode(urlTo);
 			}
+			dictionary.put(urlFrom, numNodes);
+			addNode(urlFrom);
+			adjList[numNodes-1].add(dictionary.get(urlTo));
+		} else {
+			adjList[numNodes-1].add(dictionary.get(urlTo));
 		}
 	}
 	
@@ -100,20 +61,20 @@ public class MyCITS2200Project implements CITS2200Project {
 		int vertex2 = 0;
 		list = new LinkedList<Integer>();
 		//int[] parentv = new int[dictionary.length];
-		boolean[] visited = new boolean[dictionary.length];
-		int[] distances = new int[dictionary.length];
+		boolean[] visited = new boolean[numNodes];
+		int[] distances = new int[numNodes];
 		
 		//have to iterate through dictionary to find vertex 1 and 2?
-		for(int i = 0; i < dictionary.length; i++) {
-			if(dictionary[i].equals(urlFrom)) {
+		for(int i = 0; i < numNodes; i++) {
+			if(dictionary.containsKey(urlFrom)) {
 				vertex1 = i;
 			}
-			if(dictionary[i].equals(urlTo)) {
+			if(dictionary.containsKey(urlTo)) {
 				vertex2 = i;
 			}
 		}// maybe have else case throwing an exception if it urlFrom and urlTo are not in the dictionary
 		
-		for(int i = 0; i < dictionary.length; i++) {//can also probably use arrays fill function instead of this
+		for(int i = 0; i < numNodes; i++) {//can also probably use arrays fill function instead of this
 			//parentv[i]= -1;//is parentv needed?
 			visited[i]= false;//not needed tbh
 			distances[i] = Integer.MAX_VALUE;
@@ -123,6 +84,8 @@ public class MyCITS2200Project implements CITS2200Project {
 		distances[vertex1] = 0;
 		list.add(vertex1);
 		
+		// ---------------------- NEEEEEEEED TO FIIXXXXXXXXXX --------------------------
+		/**
 		while(!list.isEmpty()) {
 			Integer top = list.remove();
 			
@@ -134,12 +97,12 @@ public class MyCITS2200Project implements CITS2200Project {
 					//parentv[i] = top;
 					visited[i] = true;
 					list.add(i);
-					/**
-					 * if(i == vertex2){
-					 * return distances[vertex2];
-					 * }
-					 * does this makes sense?
-					 */
+					
+//					  if(i == vertex2){
+//					  return distances[vertex2];
+//					  }
+//					  does this makes sense?
+					 
 					}
 				}
 			}
@@ -147,7 +110,7 @@ public class MyCITS2200Project implements CITS2200Project {
 			
 		}
 		
-		
+		**/
 		
 		return distances[vertex2];
 	}
@@ -172,18 +135,18 @@ public class MyCITS2200Project implements CITS2200Project {
 		return hamiltonpath;
 	}
 	
-	/**
+	
 	public class GraphLink {
-		public String node;
-		public String[] connections;
+		public int node;
+		public int[] connections;
 		public GraphLink next;
 		
-		public GraphLink(String nod, String[] c, GraphLink n) {
+		public GraphLink(int nod, int[] c, GraphLink n) {
 			node = nod;
 			connections = c;
 			next = n;
 		} 
 		
 	}
-	**/
+	
 }
