@@ -27,11 +27,13 @@ public class MyCITS2200Project implements CITS2200Project {
 				tempAdjList[i] = adjList[i];
 			}
 			LinkedList<Integer> edges = new LinkedList<Integer>();
+			dictionary.put(url, numNodes);
 			tempAdjList[numNodes] = edges;
 			numNodes+=1;
 			adjList = tempAdjList;
 		} else {
 			LinkedList<Integer> edges = new LinkedList<Integer>();
+			dictionary.put(url, numNodes);
 			adjList[numNodes] = edges;
 			numNodes+=1;
 		}	
@@ -42,17 +44,15 @@ public class MyCITS2200Project implements CITS2200Project {
 	// should have total worst case time complexity 2(dictionary.length)-1s
 	public void addEdge(String urlFrom, String urlTo) {
 		if (!dictionary.containsKey(urlFrom)) {
-			if (!dictionary.containsKey(urlTo)) {
-				dictionary.put(urlTo, numNodes); //put into addnode function instead maybe?
-				addNode(urlTo);
-			}
-			dictionary.put(urlFrom, numNodes); // put into addnode
 			addNode(urlFrom);
-			adjList[numNodes-1].add(dictionary.get(urlTo));
-		} else {
-			adjList[numNodes-1].add(dictionary.get(urlTo));//what if we have urlFrom but not urlTo? have to first add urlTo to dictionary maybe
-			//how do you know urlFrom is numnode-1? what if we already have both vertices 
 		}
+		
+		if(!dictionary.containsKey(urlTo)) {
+			addNode(urlTo);
+		}
+			
+		adjList[dictionary.get(urlFrom)].add(dictionary.get(urlTo));
+		
 	}
 	
 	@Override
