@@ -12,7 +12,7 @@ public class MyCITS2200Project implements CITS2200Project {
 	
 	// Constructor for CITS project
 	@SuppressWarnings("unchecked")
-	public MyCITS2200Project(String filename) {
+	public MyCITS2200Project(String filename) {//why does this have input filename?? is it needed if the test progam will load the graph
 		numNodes = 0;
 		dictionary = new HashMap<String, Integer>();
 		adjList = new LinkedList[16];
@@ -43,14 +43,15 @@ public class MyCITS2200Project implements CITS2200Project {
 	public void addEdge(String urlFrom, String urlTo) {
 		if (!dictionary.containsKey(urlFrom)) {
 			if (!dictionary.containsKey(urlTo)) {
-				dictionary.put(urlTo, numNodes);
+				dictionary.put(urlTo, numNodes); //put into addnode function instead maybe?
 				addNode(urlTo);
 			}
-			dictionary.put(urlFrom, numNodes);
+			dictionary.put(urlFrom, numNodes); // put into addnode
 			addNode(urlFrom);
 			adjList[numNodes-1].add(dictionary.get(urlTo));
 		} else {
-			adjList[numNodes-1].add(dictionary.get(urlTo));
+			adjList[numNodes-1].add(dictionary.get(urlTo));//what if we have urlFrom but not urlTo? have to first add urlTo to dictionary maybe
+			//how do you know urlFrom is numnode-1? what if we already have both vertices 
 		}
 	}
 	
@@ -64,15 +65,15 @@ public class MyCITS2200Project implements CITS2200Project {
 		boolean[] visited = new boolean[numNodes];
 		int[] distances = new int[numNodes];
 		
-		//have to iterate through dictionary to find vertex 1 and 2?
-		for(int i = 0; i < numNodes; i++) {
+		
+	//do we need to iterate? surely we can just do this?
 			if(dictionary.containsKey(urlFrom)) {
-				vertex1 = i;
+				vertex1 = dictionary.get(urlFrom);
 			}
 			if(dictionary.containsKey(urlTo)) {
-				vertex2 = i;
+				vertex2 = dictionary.get(urlTo);
 			}
-		}// maybe have else case throwing an exception if it urlFrom and urlTo are not in the dictionary
+		// maybe have else case throwing an exception if it urlFrom and urlTo are not in the dictionary
 		
 		for(int i = 0; i < numNodes; i++) {//can also probably use arrays fill function instead of this
 			//parentv[i]= -1;//is parentv needed?
@@ -80,23 +81,23 @@ public class MyCITS2200Project implements CITS2200Project {
 			distances[i] = Integer.MAX_VALUE;
 		}
 	
-		//visited[vertex1] = true;
+		visited[vertex1] = true;
 		distances[vertex1] = 0;
 		list.add(vertex1);
 		
-		// ---------------------- NEEEEEEEED TO FIIXXXXXXXXXX --------------------------
-		/**
+		
+		
 		while(!list.isEmpty()) {
 			Integer top = list.remove();
-			
-			int[] edges = dataSet[top];
-			for(int i = 0; i < edges.length; i++) {
-				if(edges[i] != 0 && !(visited[i])) {
-					if(distances[top]+1 < distances[i]) {
-				    distances[i] = distances[top]+1;
-					//parentv[i] = top;
-					visited[i] = true;
-					list.add(i);
+			LinkedList<Integer> edges = adjList[top];
+			for(int i = 0; i < edges.size(); i++) {
+			int adjv = edges.get(i); //hmmm might need to iterate through list instead
+				if(!visited[adjv]) {
+					if(distances[top]+1 < distances[adjv]) {
+				    distances[adjv] = distances[top]+1;
+					//parentv[adjv] = top;
+					visited[adjv] = true;
+					list.add(adjv);
 					
 //					  if(i == vertex2){
 //					  return distances[vertex2];
@@ -110,7 +111,7 @@ public class MyCITS2200Project implements CITS2200Project {
 			
 		}
 		
-		**/
+		
 		
 		return distances[vertex2];
 	}
@@ -130,7 +131,7 @@ public class MyCITS2200Project implements CITS2200Project {
 	@Override
 	public String[] getHamiltonianPath() {
 		
-		String[] hamiltonpath = new String[dictionary.length];
+		String[] hamiltonpath = new String[numNodes]; 
 		
 		return hamiltonpath;
 	}
