@@ -6,6 +6,7 @@ public class MyCITS2200Project implements CITS2200Project {
 	int numNodes;
 	LinkedList<Integer> adjList[];
 	HashMap<String, Integer> dictionary;
+	HashMap<Integer, String> intToString;
 	private Queue<Integer> list;
 	
 	//help me
@@ -15,6 +16,7 @@ public class MyCITS2200Project implements CITS2200Project {
 	public MyCITS2200Project(String filename) {//why does this have input filename?? is it needed if the test progam will load the graph
 		numNodes = 0;
 		dictionary = new HashMap<String, Integer>();
+		intToString = new HashMap<Integer, String>();
 		adjList = new LinkedList[16];
 	}
 	
@@ -28,12 +30,14 @@ public class MyCITS2200Project implements CITS2200Project {
 			}
 			LinkedList<Integer> edges = new LinkedList<Integer>();
 			dictionary.put(url, numNodes);
+			intToString.put(numNodes, url);
 			tempAdjList[numNodes] = edges;
 			numNodes+=1;
 			adjList = tempAdjList;
 		} else {
 			LinkedList<Integer> edges = new LinkedList<Integer>();
 			dictionary.put(url, numNodes);
+			intToString.put(numNodes, url);
 			adjList[numNodes] = edges;
 			numNodes+=1;
 		}	
@@ -85,8 +89,6 @@ public class MyCITS2200Project implements CITS2200Project {
 		distances[vertex1] = 0;
 		list.add(vertex1);
 		
-		
-		
 		while(!list.isEmpty()) {
 			Integer top = list.remove();
 			LinkedList<Integer> edges = adjList[top];
@@ -130,12 +132,27 @@ public class MyCITS2200Project implements CITS2200Project {
 
 	@Override
 	public String[] getHamiltonianPath() {
-		
-		String[] hamiltonpath = new String[numNodes]; 
-		
-		return hamiltonpath;
+		// Run the recursive function
+		LinkedList<Integer> returnList = hamiltonianC(0, adjList[0], new LinkedList<Integer>());
+		String[] returnArray = new String[numNodes];
+		int i = 0;
+		while (!returnList.isEmpty()) {
+			returnArray[i] = intToString.get(returnList.pop());
+			i++;
+		}
+		return returnArray;
 	}
 	
+	private LinkedList<Integer> hamiltonianC(int x, LinkedList<Integer> edges, LinkedList<Integer> currentState) {
+		while (!edges.isEmpty()) {
+			int nextNode = edges.pop();
+			LinkedList<Integer> nextEdges = adjList[x+1];
+			//currentState.add(nextNode);
+			currentState.addAll(hamiltonianC(nextNode, edges, currentState));	
+		}
+		return currentState;
+		
+	}
 	
 	public class GraphLink {
 		public int node;
