@@ -1,6 +1,8 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
 
@@ -61,10 +63,34 @@ public class MyCITS2200Project implements CITS2200Project {
 		if(!dictionary.containsKey(urlTo)) {
 			addNode(urlTo); //need to alter add node so it adds to transpose list
 		}
-			
-		adjList[dictionary.get(urlFrom)].add(dictionary.get(urlTo));
-		transposeList[dictionary.get(urlTo)].add(dictionary.get(urlFrom));
+		int urlFromNode = dictionary.get(urlFrom);
+		int urlToNode = dictionary.get(urlTo);
 		
+		if(!(adjList[urlFromNode].contains(urlToNode))) {
+			adjList[dictionary.get(urlFrom)].add(dictionary.get(urlTo));
+		}
+		
+		if(!(transposeList[urlToNode].contains(urlFromNode))) {
+		transposeList[dictionary.get(urlTo)].add(dictionary.get(urlFrom));
+		}
+	}
+	//ignore this method i just need it for a bit
+	public void printAdjList() {
+	
+		System.out.println("Adjacency List: ");
+		
+		for (int i = 0; i < dictionary.size(); i++) {
+			System.out.print("vertex " + i + ": ");
+			Iterator<Integer> it = adjList[i].iterator();
+			while(it.hasNext()) {
+				int n = it.next();
+				System.out.print(n + " ");
+			}
+			System.out.println();
+			
+			
+		}
+	
 	}
 	
 	@Override
@@ -129,8 +155,14 @@ public class MyCITS2200Project implements CITS2200Project {
 
 	@Override
 	public String[][] getStronglyConnectedComponents() {
+		printAdjList();
 		stack = new Stack<Integer>();
-		boolean visited[] = new boolean[adjList.length]; // should default to false right?
+		String[][] scc = new String[dictionary.size()][];
+		boolean visited[] = new boolean[dictionary.size()]; // should default to false right?
+		
+		for(int i = 0; i < visited.length; i++) {
+			visited[i] = false;
+		}
 		
 		for (int i = 0; i < visited.length; i++) {
 			if(!visited[i]) {
@@ -145,9 +177,16 @@ public class MyCITS2200Project implements CITS2200Project {
 		
 		while(!stack.empty()) {
 			int top = stack.pop();
+			if(!visited[top]) {
+				List<String> strongComponent = new ArrayList<String>();
+				
+				DFSreversal(top, visited, strongComponent);
+				String[] component = strongComponent.toArray(new String[0]); //apparently that argument makes things a lil faster
+			scc[top] = component;
+			}
 			
 		}
-		return null;
+		return scc;
 	}
 	
 	private void DFS(int vertex, boolean visited[], Stack<Integer> stack) {
@@ -165,6 +204,20 @@ public class MyCITS2200Project implements CITS2200Project {
 		stack.push(vertex);
 	}
 
+	private void DFSreversal(int vertex, boolean visited[], List<String> component) {
+		visited[vertex] = true;
+		component.add(intToString.get(vertex));
+		
+		Iterator<Integer> it = transposeList[vertex].iterator();
+		while(it.hasNext()) {
+			int adjv = it.next();
+			if(!visited[adjv]) {
+				DFSreversal(adjv, visited, component);
+				
+			}
+		}
+	
+	}
 	@Override
 	public String[] getHamiltonianPath() {
 		// Run the recursive function
