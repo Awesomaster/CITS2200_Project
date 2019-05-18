@@ -1,13 +1,17 @@
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Stack;
 
 public class MyCITS2200Project implements CITS2200Project {
 	int numNodes;
 	LinkedList<Integer> adjList[];
+	LinkedList<Integer> transposeList[];
 	HashMap<String, Integer> dictionary;
 	HashMap<Integer, String> intToString;
 	private Queue<Integer> list;
+	private Stack<Integer> stack;
 	
 	//help me
 	
@@ -18,6 +22,7 @@ public class MyCITS2200Project implements CITS2200Project {
 		dictionary = new HashMap<String, Integer>();
 		intToString = new HashMap<Integer, String>();
 		adjList = new LinkedList[16];
+		transposeList = new LinkedList[16];
 	}
 	
 	private void addNode(String url) {
@@ -34,11 +39,13 @@ public class MyCITS2200Project implements CITS2200Project {
 			tempAdjList[numNodes] = edges;
 			numNodes+=1;
 			adjList = tempAdjList;
+			transposeList = tempAdjList;
 		} else {
 			LinkedList<Integer> edges = new LinkedList<Integer>();
 			dictionary.put(url, numNodes);
 			intToString.put(numNodes, url);
 			adjList[numNodes] = edges;
+			transposeList[numNodes] = edges;
 			numNodes+=1;
 		}	
 	}
@@ -52,10 +59,11 @@ public class MyCITS2200Project implements CITS2200Project {
 		}
 		
 		if(!dictionary.containsKey(urlTo)) {
-			addNode(urlTo);
+			addNode(urlTo); //need to alter add node so it adds to transpose list
 		}
 			
 		adjList[dictionary.get(urlFrom)].add(dictionary.get(urlTo));
+		transposeList[dictionary.get(urlTo)].add(dictionary.get(urlFrom));
 		
 	}
 	
@@ -126,8 +134,40 @@ public class MyCITS2200Project implements CITS2200Project {
 
 	@Override
 	public String[][] getStronglyConnectedComponents() {
-		// TODO Auto-generated method stub
+		stack = new Stack<Integer>();
+		boolean visited[] = new boolean[adjList.length]; // should default to false right?
+		
+		for (int i = 0; i < visited.length; i++) {
+			if(!visited[i]) {
+			DFS(0, visited, stack);
+			}
+		}
+		
+		//reset visited for transpose graph
+		for(int i = 0; i< visited.length; i++) {
+			visited[i] = false;
+		}
+		
+		while(!stack.empty()) {
+			int top = stack.pop();
+			
+		}
 		return null;
+	}
+	
+	private void DFS(int vertex, boolean visited[], Stack<Integer> stack) {
+		visited[vertex] = true;
+		
+		//look at adjacent vertices
+		Iterator<Integer> it = adjList[vertex].iterator();
+		while(it.hasNext()) {
+			int adjv = it.next();
+			if (!visited[adjv]) {
+				DFS(adjv, visited, stack);
+			}
+			
+		}
+		stack.push(vertex);
 	}
 
 	@Override
