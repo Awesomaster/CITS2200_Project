@@ -40,8 +40,12 @@ public class CITS2200ProjectTester {
 		loadGraph(proj, pathToGraphFile);
 		testShortestPath(proj);
 		String[] printStr = (proj.getHamiltonianPath());
-		for (String i : printStr) {
-			System.out.println(i);
+		if (printStr==null) {
+			System.out.println("heck");
+		} else {
+			for (String i : printStr) {
+				System.out.println(i);
+			}	
 		}
 		
 

@@ -116,13 +116,8 @@ public class MyCITS2200Project implements CITS2200Project {
 					 
 					}
 				}
-			}
-			
-			
+			}	
 		}
-		
-		
-		
 		return distances[vertex2];
 	}
 
@@ -174,24 +169,47 @@ public class MyCITS2200Project implements CITS2200Project {
 	public String[] getHamiltonianPath() {
 		// Run the recursive function
 		LinkedList<Integer> returnList = hamiltonianC(0, adjList[0], new LinkedList<Integer>());
-		String[] returnArray = new String[numNodes];
-		int i = 0;
-		while (!returnList.isEmpty()) {
-			returnArray[i] = intToString.get(returnList.pop());
-			i++;
+		System.out.println("Node Count: " + numNodes);
+		System.out.println("Return List Len: " + returnList.size());
+		if (returnList.size() == numNodes+1) {
+			String[] returnArray = new String[numNodes+1];
+			int i = 0;
+			while (!returnList.isEmpty()) {
+				returnArray[i] = intToString.get(returnList.pop());
+				i++;
+			}
+			return returnArray;
 		}
-		return returnArray;
+		return null;
 	}
 	
-	private LinkedList<Integer> hamiltonianC(int x, LinkedList<Integer> edges, LinkedList<Integer> currentState) {
-		while (!edges.isEmpty()) {
-			int nextNode = edges.pop();
-			LinkedList<Integer> nextEdges = adjList[x+1];
-			//currentState.add(nextNode);
-			currentState.addAll(hamiltonianC(nextNode, edges, currentState));	
+	private LinkedList<Integer> hamiltonianC(int currentNode, LinkedList<Integer> edges, LinkedList<Integer> currentState) {
+		if (currentState.size() == numNodes) {
+			//System.out.println("Are we human");
+			if (edges.contains(0)) {
+				currentState.add(0);
+				return currentState;
+			} else {
+				currentState.add(-1);
+				return currentState;
+			}
+		} else {
+			while (!edges.isEmpty()) {
+				//System.out.println("Size: " + currentState.size());
+				int nextNode = edges.pop();
+				//System.out.println("Current: " + currentNode);
+				//System.out.println("Next: " + nextNode);
+				if (!currentState.contains(nextNode)) {
+					//System.out.println("Great Success");
+					System.out.println("CurrentNode: " + currentNode);
+					LinkedList<Integer> nextEdges = adjList[nextNode];
+					currentState.add(currentNode);
+					//currentState.add(nextNode);
+					currentState = hamiltonianC(nextNode, nextEdges, currentState);
+				}
+			}
+			return currentState;
 		}
-		return currentState;
-		
 	}
 	
 	public class GraphLink {
