@@ -51,8 +51,6 @@ public class MyCITS2200Project implements CITS2200Project {
 	}
 	
 	@Override
-	// should have total average time complexity dictionary.length
-	// should have total worst case time complexity 2(dictionary.length)-1s
 	public void addEdge(String urlFrom, String urlTo) {
 		if (!dictionary.containsKey(urlFrom)) {
 			addNode(urlFrom);
