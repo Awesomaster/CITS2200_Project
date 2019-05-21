@@ -193,7 +193,8 @@ public class MyCITS2200Project implements CITS2200Project {
 		visited[vertex] = true;
 		
 		//look at adjacent vertices
-		Iterator<Integer> it = adjList[vertex].iterator();
+		LinkedList<Integer> edges = adjList[vertex];
+		Iterator<Integer> it = edges.iterator();
 		while(it.hasNext()) {
 			int adjv = it.next();
 			if (!visited[adjv]) {
