@@ -36,17 +36,18 @@ public class CITS2200ProjectTester {
 		String pathToGraphFile = "example_graph.txt";
 		String sccstuff = "sccgraph.txt";
 		// Create an instance of your implementation.
-		//CITS2200Project proj = new MyCITS2200Project(pathToGraphFile);
-		CITS2200Project proj = new MyCITS2200Project(sccstuff);
+		CITS2200Project proj = new MyCITS2200Project(pathToGraphFile);
+		//CITS2200Project proj = new MyCITS2200Project(sccstuff);
 		// Load the graph into the project.
-		//loadGraph(proj, pathToGraphFile);
+		loadGraph(proj, pathToGraphFile);
 		//testShortestPath(proj);
-		loadGraph(proj, sccstuff);
+		//loadGraph(proj, sccstuff);
 		
 		String[][] array = proj.getStronglyConnectedComponents();
 		for (int i = 0; i < array.length; i++) {
+			System.out.print("SCC " + (i+1) + ":");
 			for (int j = 0; j < array[i].length; j++) {
-				System.out.print(array[i][j]);
+				System.out.print(array[i][j] + ", ");
 			}
 			System.out.println();
 		}

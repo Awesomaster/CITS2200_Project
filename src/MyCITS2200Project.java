@@ -33,22 +33,28 @@ public class MyCITS2200Project implements CITS2200Project {
 			// Could use System.arraycopy
 			@SuppressWarnings("unchecked")
 			LinkedList<Integer>[] tempAdjList = new LinkedList[adjList.length*2];
+			@SuppressWarnings("unchecked")
+			LinkedList<Integer>[] temptranspose = new LinkedList[transposeList.length*2];
 			for (int i = 0; i < adjList.length; i++) {
 				tempAdjList[i] = adjList[i];
+				temptranspose[i] = transposeList[i];
 			}
 			LinkedList<Integer> edges = new LinkedList<Integer>();
+			LinkedList<Integer> diffedges = new LinkedList<Integer>(); 
 			dictionary.put(url, numNodes);
 			intToString.put(numNodes, url);
 			tempAdjList[numNodes] = edges;
+			temptranspose[numNodes]= diffedges;
 			numNodes+=1;
 			adjList = tempAdjList;
-			transposeList = tempAdjList;
+			transposeList = temptranspose;
 		} else {
 			LinkedList<Integer> edges = new LinkedList<Integer>();
+			LinkedList<Integer> diffedges = new LinkedList<Integer>(); // this fixes it wtf
 			dictionary.put(url, numNodes);
 			intToString.put(numNodes, url);
 			adjList[numNodes] = edges;
-			transposeList[numNodes] = edges;
+			transposeList[numNodes] = diffedges;
 			numNodes+=1;
 		}	
 	}
@@ -90,6 +96,18 @@ public class MyCITS2200Project implements CITS2200Project {
 			
 		}
 		
+		System.out.println("Transpose List: ");
+		for(int i = 0; i < dictionary.size(); i++) {
+			System.out.print("vertex " + i + ": ");
+			Iterator<Integer> myIt = transposeList[i].iterator();
+			while(myIt.hasNext()) {
+				int n = myIt.next();
+				System.out.print(n + " ");
+			}
+			System.out.println();
+		}
+		
+		System.out.println("dictionary output: ");
 		for(String i : dictionary.keySet()) {
 			String key = i;
 			String value = dictionary.get(i).toString();
