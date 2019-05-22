@@ -206,7 +206,7 @@ public class MyCITS2200Project implements CITS2200Project {
 				List<String> strongComponent = new ArrayList<String>();
 				
 				DFSreversal(top, visited, strongComponent);
-				String[] component = strongComponent.toArray(new String[strongComponent.size()]); //apparently that argument makes things a lil faster
+				String[] component = strongComponent.toArray(new String[0]); //apparently that argument makes things a lil faster
 			scc[index] = component;
 			index++;
 			}
@@ -252,6 +252,7 @@ public class MyCITS2200Project implements CITS2200Project {
 				
 			}
 		}
+		
 	
 	}
 	@Override
@@ -301,17 +302,6 @@ public class MyCITS2200Project implements CITS2200Project {
 		}
 	}
 	
-	public class GraphLink {
-		public int node;
-		public int[] connections;
-		public GraphLink next;
-		
-		public GraphLink(int nod, int[] c, GraphLink n) {
-			node = nod;
-			connections = c;
-			next = n;
-		} 
-		
-	}
+	
 	
 }
