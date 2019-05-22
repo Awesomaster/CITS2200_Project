@@ -131,6 +131,7 @@ public class MyCITS2200Project implements CITS2200Project {
 			if(dictionary.containsKey(urlFrom)) {
 				vertex1 = dictionary.get(urlFrom);
 			}
+			
 			if(dictionary.containsKey(urlTo)) {
 				vertex2 = dictionary.get(urlTo);
 			}
@@ -172,10 +173,76 @@ public class MyCITS2200Project implements CITS2200Project {
 
 	@Override
 	public String[] getCenters() {
-		// TODO Auto-generated method stub
-		return null;
+		int[] eccentricity = new int[numNodes]; // max shortest path for each vertex
+		
+	for (int i = 0; i < numNodes; i++) {
+		int[] distances = BFS(i);
+		int max = 0; //would do distances 0, but that might have integer Max.value and i dont want to have to iterate through array to find a valid initial max value
+		for(int j =0; j<distances.length; j++) {
+			if(distances[j]>max && (distances[j] != Integer.MAX_VALUE)) {
+				max = distances[j];
+			}
+		}
+		
+		eccentricity[i] = max; //set max shortest path for vertex i	
+	}
+	//find min eccentricity
+	
+	int min = eccentricity[0];
+	for (int i = 0; i < eccentricity.length; i++) {
+		if(eccentricity[i]<min) {
+			min = eccentricity[i];
+		}
+	}
+	//find centres with min eccentricity and add them to string array
+	List<String> centre = new ArrayList<>();
+	for(int i = 0; i <eccentricity.length; i++){
+		if(eccentricity[i] == min) {
+			centre.add(intToString.get(i));
+		}
 	}
 
+	 String[] centres = centre.toArray(new String[0]); // is this better than having two diff arrays?
+	
+	return centres;
+	}
+
+	public int[] BFS(int vertex){
+		int[] distance = new int[numNodes];
+		list = new LinkedList<Integer>();
+		boolean[] visited = new boolean[numNodes];
+		
+		
+
+		for(int i = 0; i < numNodes; i++) {
+			visited[i]= false;
+			distance[i] = Integer.MAX_VALUE;
+		}
+		
+
+		visited[vertex] = true;
+		distance[vertex] = 0;
+		list.add(vertex);
+		
+		while(!list.isEmpty()) {
+			Integer top = list.remove();
+			LinkedList<Integer> edges = adjList[top];
+			for(int i = 0; i < edges.size(); i++) {
+			int adjv = edges.get(i); 
+				if(!visited[adjv]) {
+					if(distance[top]+1 < distance[adjv]) {
+				    distance[adjv] = distance[top]+1;
+					visited[adjv] = true;
+					list.add(adjv);
+					 
+					}
+				}
+			}	
+		}
+		
+		
+		return distance;
+	}
 	@Override
 	public String[][] getStronglyConnectedComponents() {
 		printAdjList();
@@ -262,6 +329,8 @@ public class MyCITS2200Project implements CITS2200Project {
 	}
 
 	private boolean p(int currentNode, LinkedList<Integer> edges) {
+		return false;
+		
 		
 	}
 	
