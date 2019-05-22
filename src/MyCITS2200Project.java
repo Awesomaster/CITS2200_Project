@@ -216,10 +216,24 @@ public class MyCITS2200Project implements CITS2200Project {
 		}
 	
 	}
+	
+	public String[] getHamiltonianPath() {
+		return null; 
+
+	}
+
+	private boolean p(int currentNode, LinkedList<Integer> edges) {
+		
+	}
+	
+/**
 	@Override
 	public String[] getHamiltonianPath() {
 		// Run the recursive function
-		LinkedList<Integer> returnList = hamiltonianC(0, adjList[0], new LinkedList<Integer>());
+		LinkedList<Integer> currentState = new LinkedList<Integer>();
+		currentState.add(0);
+		LinkedList<Integer> returnList = hamiltonianC(0, adjList[0], currentState);
+
 		System.out.println("Node Count: " + numNodes);
 		System.out.println("Return List Len: " + returnList.size());
 		if (returnList.size() == numNodes+1) {
@@ -235,33 +249,28 @@ public class MyCITS2200Project implements CITS2200Project {
 	}
 	
 	private LinkedList<Integer> hamiltonianC(int currentNode, LinkedList<Integer> edges, LinkedList<Integer> currentState) {
-		if (currentState.size() == numNodes) {
-			//System.out.println("Are we human");
-			if (edges.contains(0)) {
-				currentState.add(0);
-				return currentState;
-			} else {
-				currentState.add(-1);
-				return currentState;
-			}
-		} else {
-			while (!edges.isEmpty()) {
-				//System.out.println("Size: " + currentState.size());
-				int nextNode = edges.pop();
-				//System.out.println("Current: " + currentNode);
-				//System.out.println("Next: " + nextNode);
-				if (!currentState.contains(nextNode)) {
-					//System.out.println("Great Success");
-					System.out.println("CurrentNode: " + currentNode);
+		while (!edges.isEmpty()) {
+			int nextNode = edges.pop();
+			if (!currentState.contains(nextNode)) {
 					LinkedList<Integer> nextEdges = adjList[nextNode];
-					currentState.add(currentNode);
-					//currentState.add(nextNode);
-					currentState = hamiltonianC(nextNode, nextEdges, currentState);
-				}
+					currentState.add(nextNode);	
+					if (currentState.size() == numNodes) {
+						if (edges.contains(0)) {
+							currentState.add(0);
+							return currentState;
+						} else {
+							currentState.add(-1);
+							return currentState;
+						}
+					} else if(currentState.size() == numNodes+1) {
+						return currentState;
+					}
+					currentState = hamiltonianC(nextNode, nextEdges, currentState);	
 			}
-			return currentState;
 		}
+		return currentState;
 	}
+**/	
 	
 	public class GraphLink {
 		public int node;

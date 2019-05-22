@@ -32,8 +32,8 @@ public class CITS2200ProjectTester {
 	}
 	
 	public static void main(String[] args) {
-		// Change this to be the path to the graph file.
-		String pathToGraphFile = "example_graph.txt";
+		// Change this to be the path to the graph file. Please stop making it just example_graph.txt, why is it runnig with different syntax between the two of us
+		String pathToGraphFile = "src/example_graph2.txt";
 		// Create an instance of your implementation.
 		CITS2200Project proj = new MyCITS2200Project(pathToGraphFile);
 		// Load the graph into the project.
@@ -41,8 +41,8 @@ public class CITS2200ProjectTester {
 		testShortestPath(proj);
 		
 		String[][] array = proj.getStronglyConnectedComponents();
-		System.out.println(Arrays.deepToString(array).replace("], ", "]\n"));
-		/**String[] printStr = (proj.getHamiltonianPath());
+		//System.out.println(Arrays.deepToString(array).replace("], ", "]\n"));
+		String[] printStr = (proj.getHamiltonianPath());
 		if (printStr==null) {
 			System.out.println("heck");
 		} else {
@@ -51,7 +51,6 @@ public class CITS2200ProjectTester {
 			}	
 		}
 		
-**/
 		// Write your own tests!
 	}
 }
