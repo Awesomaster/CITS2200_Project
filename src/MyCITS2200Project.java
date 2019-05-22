@@ -14,6 +14,7 @@ public class MyCITS2200Project implements CITS2200Project {
 	HashMap<Integer, String> intToString;
 	private Queue<Integer> list;
 	private Stack<Integer> stack;
+	private boolean[] visited;
 	
 	//help me
 	
@@ -32,22 +33,28 @@ public class MyCITS2200Project implements CITS2200Project {
 			// Could use System.arraycopy
 			@SuppressWarnings("unchecked")
 			LinkedList<Integer>[] tempAdjList = new LinkedList[adjList.length*2];
+			@SuppressWarnings("unchecked")
+			LinkedList<Integer>[] temptranspose = new LinkedList[transposeList.length*2];
 			for (int i = 0; i < adjList.length; i++) {
 				tempAdjList[i] = adjList[i];
+				temptranspose[i] = transposeList[i];
 			}
 			LinkedList<Integer> edges = new LinkedList<Integer>();
+			LinkedList<Integer> diffedges = new LinkedList<Integer>(); 
 			dictionary.put(url, numNodes);
 			intToString.put(numNodes, url);
 			tempAdjList[numNodes] = edges;
+			temptranspose[numNodes]= diffedges;
 			numNodes+=1;
 			adjList = tempAdjList;
-			transposeList = tempAdjList;
+			transposeList = temptranspose;
 		} else {
 			LinkedList<Integer> edges = new LinkedList<Integer>();
+			LinkedList<Integer> diffedges = new LinkedList<Integer>(); // this fixes it wtf
 			dictionary.put(url, numNodes);
 			intToString.put(numNodes, url);
 			adjList[numNodes] = edges;
-			transposeList[numNodes] = edges;
+			transposeList[numNodes] = diffedges;
 			numNodes+=1;
 		}	
 	}
@@ -87,6 +94,24 @@ public class MyCITS2200Project implements CITS2200Project {
 			System.out.println();
 			
 			
+		}
+		
+		System.out.println("Transpose List: ");
+		for(int i = 0; i < dictionary.size(); i++) {
+			System.out.print("vertex " + i + ": ");
+			Iterator<Integer> myIt = transposeList[i].iterator();
+			while(myIt.hasNext()) {
+				int n = myIt.next();
+				System.out.print(n + " ");
+			}
+			System.out.println();
+		}
+		
+		System.out.println("dictionary output: ");
+		for(String i : dictionary.keySet()) {
+			String key = i;
+			String value = dictionary.get(i).toString();
+			System.out.println("Key: "+ key + " Value: "+ value);
 		}
 	
 	}
@@ -154,9 +179,10 @@ public class MyCITS2200Project implements CITS2200Project {
 	@Override
 	public String[][] getStronglyConnectedComponents() {
 		printAdjList();
+		int index = 0;
 		stack = new Stack<Integer>();
 		String[][] scc = new String[dictionary.size()][];
-		boolean visited[] = new boolean[dictionary.size()]; // should default to false right?
+		visited = new boolean[dictionary.size()]; // should default to false right?
 		
 		for(int i = 0; i < visited.length; i++) {
 			visited[i] = false;
@@ -173,29 +199,41 @@ public class MyCITS2200Project implements CITS2200Project {
 			visited[i] = false;
 		}
 		
-		while(!stack.empty()) {
+		while(!stack.empty()) {//maybe change to isempty
 			int top = stack.pop();
 			if(!visited[top]) {
+				
 				List<String> strongComponent = new ArrayList<String>();
 				
 				DFSreversal(top, visited, strongComponent);
 				String[] component = strongComponent.toArray(new String[0]); //apparently that argument makes things a lil faster
-			scc[top] = component;
+			scc[index] = component;
+			index++;
 			}
 			
 		}
-		return scc;
+		//ahahahhahahahahaahahahahah what the FUKC
+		
+		String[][] actualscc = new String[index][];
+		for (int i = 0; i < index; i++) {
+			actualscc[i] = scc[i];
+		}
+		
+		return actualscc;
 	}
 	
-	private void DFS(int vertex, boolean visited[], Stack<Integer> stack) {
-		visited[vertex] = true;
+	private void DFS(int vertex, boolean visit[], Stack<Integer> st) {
+		visit[vertex] = true;
 		
 		//look at adjacent vertices
-		Iterator<Integer> it = adjList[vertex].iterator();
+		LinkedList<Integer> edges = adjList[vertex];
+		Iterator<Integer> it = edges.iterator();
+
 		while(it.hasNext()) {
 			int adjv = it.next();
-			if (!visited[adjv]) {
-				DFS(adjv, visited, stack);
+		
+			if (!visit[adjv]) {
+				DFS(adjv, visit, st);
 			}
 			
 		}
@@ -214,6 +252,7 @@ public class MyCITS2200Project implements CITS2200Project {
 				
 			}
 		}
+		
 	
 	}
 	
@@ -272,17 +311,6 @@ public class MyCITS2200Project implements CITS2200Project {
 	}
 **/	
 	
-	public class GraphLink {
-		public int node;
-		public int[] connections;
-		public GraphLink next;
-		
-		public GraphLink(int nod, int[] c, GraphLink n) {
-			node = nod;
-			connections = c;
-			next = n;
-		} 
-		
-	}
+	
 	
 }

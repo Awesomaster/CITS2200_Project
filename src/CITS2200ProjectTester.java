@@ -32,17 +32,36 @@ public class CITS2200ProjectTester {
 	}
 	
 	public static void main(String[] args) {
+<<<<<<< HEAD
 		// Change this to be the path to the graph file. Please stop making it just example_graph.txt, why is it runnig with different syntax between the two of us
 		String pathToGraphFile = "src/example_graph2.txt";
+=======
+		// Change this to be the path to the graph file.
+		String pathToGraphFile = "example_graph.txt";
+		String sccstuff = "sccgraph.txt";
+>>>>>>> 77bfd75efd95bfb545b0fa85464cb064d7728e03
 		// Create an instance of your implementation.
-		CITS2200Project proj = new MyCITS2200Project(pathToGraphFile);
+		//CITS2200Project proj = new MyCITS2200Project(pathToGraphFile);
+		CITS2200Project proj = new MyCITS2200Project(sccstuff);
 		// Load the graph into the project.
-		loadGraph(proj, pathToGraphFile);
-		testShortestPath(proj);
+		//loadGraph(proj, pathToGraphFile);
+		//testShortestPath(proj);
+		loadGraph(proj, sccstuff);
 		
 		String[][] array = proj.getStronglyConnectedComponents();
+<<<<<<< HEAD
 		//System.out.println(Arrays.deepToString(array).replace("], ", "]\n"));
 		String[] printStr = (proj.getHamiltonianPath());
+=======
+		for (int i = 0; i < array.length; i++) {
+			System.out.print("SCC " + (i+1) + ":");
+			for (int j = 0; j < array[i].length; j++) {
+				System.out.print(array[i][j] + ", ");
+			}
+			System.out.println();
+		}
+		/**String[] printStr = (proj.getHamiltonianPath());
+>>>>>>> 77bfd75efd95bfb545b0fa85464cb064d7728e03
 		if (printStr==null) {
 			System.out.println("heck");
 		} else {
