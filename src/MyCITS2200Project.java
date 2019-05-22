@@ -113,6 +113,13 @@ public class MyCITS2200Project implements CITS2200Project {
 			String value = dictionary.get(i).toString();
 			System.out.println("Key: "+ key + " Value: "+ value);
 		}
+		
+		System.out.println("intToString output: ");
+		for(int i : intToString.keySet()) {
+			int key = i;
+			String value = intToString.get(i);
+			System.out.println("Key: " + key + " Value: "+ value);
+		}
 	
 	}
 	
@@ -121,13 +128,6 @@ public class MyCITS2200Project implements CITS2200Project {
 		// use breadth first search
 		int vertex1 = 0;
 		int vertex2 = 0;
-		list = new LinkedList<Integer>();
-		//int[] parentv = new int[dictionary.length];
-		boolean[] visited = new boolean[numNodes];
-		int[] distances = new int[numNodes];
-		
-		
-	//do we need to iterate? surely we can just do this?
 			if(dictionary.containsKey(urlFrom)) {
 				vertex1 = dictionary.get(urlFrom);
 			}
@@ -137,37 +137,9 @@ public class MyCITS2200Project implements CITS2200Project {
 			}
 		// maybe have else case throwing an exception if it urlFrom and urlTo are not in the dictionary
 		
-		for(int i = 0; i < numNodes; i++) {//can also probably use arrays fill function instead of this
-			//parentv[i]= -1;//is parentv needed?
-			visited[i]= false;//not needed tbh
-			distances[i] = Integer.MAX_VALUE;
-		}
-	
-		visited[vertex1] = true;
-		distances[vertex1] = 0;
-		list.add(vertex1);
+		int[] distances = BFS(vertex1);
 		
-		while(!list.isEmpty()) {
-			Integer top = list.remove();
-			LinkedList<Integer> edges = adjList[top];
-			for(int i = 0; i < edges.size(); i++) {
-			int adjv = edges.get(i); //hmmm might need to iterate through list instead
-				if(!visited[adjv]) {
-					if(distances[top]+1 < distances[adjv]) {
-				    distances[adjv] = distances[top]+1;
-					//parentv[adjv] = top;
-					visited[adjv] = true;
-					list.add(adjv);
-					
-//					  if(i == vertex2){
-//					  return distances[vertex2];
-//					  }
-//					  does this makes sense?
-					 
-					}
-				}
-			}	
-		}
+		
 		return distances[vertex2];
 	}
 
@@ -177,23 +149,28 @@ public class MyCITS2200Project implements CITS2200Project {
 		
 	for (int i = 0; i < numNodes; i++) {
 		int[] distances = BFS(i);
-		int max = 0; //would do distances 0, but that might have integer Max.value and i dont want to have to iterate through array to find a valid initial max value
+		int k = 0;
+		while(distances[k] == Integer.MAX_VALUE) {
+			k++;	
+		}
+		int max = distances[k];
 		for(int j =0; j<distances.length; j++) {
 			if(distances[j]>max && (distances[j] != Integer.MAX_VALUE)) {
 				max = distances[j];
 			}
 		}
-		
+	
 		eccentricity[i] = max; //set max shortest path for vertex i	
 	}
 	//find min eccentricity
 	
 	int min = eccentricity[0];
 	for (int i = 0; i < eccentricity.length; i++) {
-		if(eccentricity[i]<min) {
+		if(eccentricity[i]<min && eccentricity[i] != 0) {
 			min = eccentricity[i];
 		}
 	}
+	
 	//find centres with min eccentricity and add them to string array
 	List<String> centre = new ArrayList<>();
 	for(int i = 0; i <eccentricity.length; i++){

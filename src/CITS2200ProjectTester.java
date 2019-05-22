@@ -27,7 +27,7 @@ public class CITS2200ProjectTester {
 	}
 	public static void testShortestPath(CITS2200Project project) {
 
-		//assertEquals(2,project.getShortestPath("/wiki/Flow_network","/wiki/Minimum_cut"));
+		assertEquals(2,project.getShortestPath("/wiki/Flow_network","/wiki/Minimum_cut"));
 
 	}
 	
@@ -47,7 +47,7 @@ public class CITS2200ProjectTester {
 	String[] centres = project.getCenters();
 	System.out.println("Centres: ");
 	for(int i = 0; i < centres.length; i++) {
-		System.out.print(i + " ");
+		System.out.println(centres[i] + " ");
 	}
 	}
 	
@@ -56,12 +56,12 @@ public class CITS2200ProjectTester {
 		String pathToGraphFile = "example_graph.txt";
 		String sccstuff = "sccgraph.txt";
 		// Create an instance of your implementation.
-		//CITS2200Project proj = new MyCITS2200Project(pathToGraphFile);
-		CITS2200Project proj = new MyCITS2200Project(sccstuff);
+		CITS2200Project proj = new MyCITS2200Project(pathToGraphFile);
+		//CITS2200Project proj = new MyCITS2200Project(sccstuff);
 		// Load the graph into the project.
-		//loadGraph(proj, pathToGraphFile);
-		//testShortestPath(proj);
-		loadGraph(proj, sccstuff);
+		loadGraph(proj, pathToGraphFile);
+		testShortestPath(proj);
+		//loadGraph(proj, sccstuff);
 		printSCC(proj);
 		printGetCentres(proj);
 		
