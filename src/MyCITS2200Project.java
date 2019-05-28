@@ -1,13 +1,21 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 import java.util.Stack;
 
 public class MyCITS2200Project implements CITS2200Project {
 	int numNodes;
+	
+	int visitedAll;
+	int[] path;
+	int[][] dp;
+	Stack<Integer> returnStack;
+	
 	LinkedList<Integer> adjList[];
 	LinkedList<Integer> transposeList[];
 	HashMap<String, Integer> dictionary;
@@ -15,6 +23,8 @@ public class MyCITS2200Project implements CITS2200Project {
 	private Queue<Integer> list;
 	private Stack<Integer> stack;
 	private boolean[] visited;
+	
+	
 	
 	//help me
 	
@@ -300,63 +310,86 @@ public class MyCITS2200Project implements CITS2200Project {
 	
 	}
 	
+	// We are using a hamiltonian cycle
 	public String[] getHamiltonianPath() {
-		return null; 
-
-	}
-
-	private boolean p(int currentNode, LinkedList<Integer> edges) {
-		return false;
+		// Stack we will use to add all the nodes visited and then show our path
+		returnStack = new Stack<Integer>();
 		
-		
-	}
-	
-/**
-	@Override
-	public String[] getHamiltonianPath() {
-		// Run the recursive function
-		LinkedList<Integer> currentState = new LinkedList<Integer>();
-		currentState.add(0);
-		LinkedList<Integer> returnList = hamiltonianC(0, adjList[0], currentState);
-
-		System.out.println("Node Count: " + numNodes);
-		System.out.println("Return List Len: " + returnList.size());
-		if (returnList.size() == numNodes+1) {
-			String[] returnArray = new String[numNodes+1];
-			int i = 0;
-			while (!returnList.isEmpty()) {
-				returnArray[i] = intToString.get(returnList.pop());
-				i++;
+		// Initialising the array to store all of the bitmask states to -1
+		dp = new int[(1<<numNodes)][numNodes];
+		for (int i = 0; i < (1<<numNodes); i++) {
+			for (int j = 0; j < numNodes; j++) {
+				dp[i][j] = -1;
 			}
-			return returnArray;
 		}
-		return null;
+		
+		String[] returnString = new String[numNodes+1];
+		
+		// Setting the variable of the full bitmask, (essentially 11111... numNodes times)
+		visitedAll = (1<<numNodes)-1;
+		
+		// Setting a default bitmask to start with, where we have just visited node 0
+		int visitedBitmask = 1;
+		int n = 0;
+		
+		// Return null if there was not a cycle
+		if (p(0, adjList[0], 1)==0) {
+			return null;
+		}
+		
+		// If there was no failure, iterate through the stack and add it to the returnString
+		while (!returnStack.isEmpty()) {
+			String currentStr = intToString.get(returnStack.pop());
+			System.out.println(currentStr);
+			returnString[n] = currentStr;
+			n++;
+		}
+		return returnString;
+
 	}
-	
-	private LinkedList<Integer> hamiltonianC(int currentNode, LinkedList<Integer> edges, LinkedList<Integer> currentState) {
+
+	private int p(int currentNode, LinkedList<Integer> edges, int visitedBitmask) {
+		// Check if a path exists from the current node to the visitedBitmask of nodes
+		
+		// Have we visited all nodes
+		if (visitedBitmask==visitedAll) {
+			// If so does the final node link back to 0
+			if (adjList[currentNode].contains(0)) {
+				// Adding the final value and the 0 to represent to cycle
+				returnStack.add(0);
+				returnStack.add(currentNode);
+				
+				return dp[currentNode][0];
+			} else {
+				return 0;
+			}
+		}
+		
+		// If we have already done the calculation, then if that path is possible
+		if (dp[visitedBitmask][currentNode]!=-1) {
+			return dp[visitedBitmask][currentNode];
+		}
+		
+		int ans = 1000;
+		
+		// Check all the adjacent nodes
 		while (!edges.isEmpty()) {
+			// Grab one adjacent node
 			int nextNode = edges.pop();
-			if (!currentState.contains(nextNode)) {
-					LinkedList<Integer> nextEdges = adjList[nextNode];
-					currentState.add(nextNode);	
-					if (currentState.size() == numNodes) {
-						if (edges.contains(0)) {
-							currentState.add(0);
-							return currentState;
-						} else {
-							currentState.add(-1);
-							return currentState;
-						}
-					} else if(currentState.size() == numNodes+1) {
-						return currentState;
-					}
-					currentState = hamiltonianC(nextNode, nextEdges, currentState);	
+			
+			// Check if that node has been visited
+			if ((visitedBitmask&(1<<nextNode))==0) {
+				// Check if a path exists from the children of our nextNode to the visitedBitmask plus the nextNode
+				int newAns = 1 + p(nextNode, adjList[nextNode],visitedBitmask|(1<<nextNode));
+				// The shortest path would be either the original path or our new path (that may now be one node deeper)
+				if (newAns < ans) {
+					returnStack.add(currentNode);
+				}
+				ans = Integer.min(newAns, ans);
+				
 			}
 		}
-		return currentState;
+		
+		return dp[visitedBitmask][currentNode] = ans;
 	}
-**/	
-	
-	
-	
 }
