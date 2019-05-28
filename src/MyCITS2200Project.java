@@ -176,7 +176,7 @@ public class MyCITS2200Project implements CITS2200Project {
 	
 	int min = eccentricity[0];
 	for (int i = 0; i < eccentricity.length; i++) {
-		if(eccentricity[i]<min && eccentricity[i] != 0) {
+		if(eccentricity[i]<min) {
 			min = eccentricity[i];
 		}
 	}
@@ -232,7 +232,7 @@ public class MyCITS2200Project implements CITS2200Project {
 	}
 	@Override
 	public String[][] getStronglyConnectedComponents() {
-		printAdjList();
+		//printAdjList();
 		int index = 0;
 		stack = new Stack<Integer>();
 		String[][] scc = new String[dictionary.size()][];

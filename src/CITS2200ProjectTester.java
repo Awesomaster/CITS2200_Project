@@ -54,18 +54,25 @@ public class CITS2200ProjectTester {
 	public static void main(String[] args) {
 		// Change this to be the path to the graph file.
 		String pathToGraphFile = "src/hamilton";
-		//String sccstuff = "sccgraph.txt";
+		String sccstuff = "sccgraph.txt";
+		String mediumgraph = "medium_graph.txt";
 		// Create an instance of your implementation.
-		CITS2200Project proj = new MyCITS2200Project(pathToGraphFile);
+		//CITS2200Project proj = new MyCITS2200Project(pathToGraphFile);
 		//CITS2200Project proj = new MyCITS2200Project(sccstuff);
+		CITS2200Project proj = new MyCITS2200Project(mediumgraph);
 		// Load the graph into the project.
-		loadGraph(proj, pathToGraphFile);
+		//loadGraph(proj, pathToGraphFile);
+		loadGraph(proj,mediumgraph);
+		assertEquals(5,proj.getShortestPath("/wiki/Australia", "/wiki/United+Kingdom"));
+		printGetCentres(proj);
+		printSCC(proj);
+		
 		//testShortestPath(proj);
 		//loadGraph(proj, sccstuff);
 		//printSCC(proj);
 		//printGetCentres(proj);
 		
-		proj.getHamiltonianPath();
+		//proj.getHamiltonianPath();
 		
 		/**String[] printStr = (proj.getHamiltonianPath());
 		if (printStr==null) {
