@@ -1,13 +1,21 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 import java.util.Stack;
 
 public class MyCITS2200Project implements CITS2200Project {
 	int numNodes;
+
+	int visitedAll;
+	int[] path;
+	int[][] dp;
+	Stack<Integer> returnStack;
+
 	LinkedList<Integer> adjList[];
 	LinkedList<Integer> transposeList[];
 	HashMap<String, Integer> dictionary;
@@ -15,9 +23,11 @@ public class MyCITS2200Project implements CITS2200Project {
 	private Queue<Integer> list;
 	private Stack<Integer> stack;
 	private boolean[] visited;
-	
+
+
+
 	//help me
-	
+
 	// Constructor for CITS project
 	@SuppressWarnings("unchecked")
 	public MyCITS2200Project(String filename) {//why does this have input filename?? is it needed if the test progam will load the graph
@@ -27,7 +37,7 @@ public class MyCITS2200Project implements CITS2200Project {
 		adjList = new LinkedList[16];
 		transposeList = new LinkedList[16];
 	}
-	
+
 	private void addNode(String url) {
 		if (numNodes==adjList.length) {
 			// Could use System.arraycopy
@@ -40,7 +50,7 @@ public class MyCITS2200Project implements CITS2200Project {
 				temptranspose[i] = transposeList[i];
 			}
 			LinkedList<Integer> edges = new LinkedList<Integer>();
-			LinkedList<Integer> diffedges = new LinkedList<Integer>(); 
+			LinkedList<Integer> diffedges = new LinkedList<Integer>();
 			dictionary.put(url, numNodes);
 			intToString.put(numNodes, url);
 			tempAdjList[numNodes] = edges;
@@ -56,34 +66,34 @@ public class MyCITS2200Project implements CITS2200Project {
 			adjList[numNodes] = edges;
 			transposeList[numNodes] = diffedges;
 			numNodes+=1;
-		}	
+		}
 	}
-	
+
 	@Override
 	public void addEdge(String urlFrom, String urlTo) {
 		if (!dictionary.containsKey(urlFrom)) {
 			addNode(urlFrom);
 		}
-		
+
 		if(!dictionary.containsKey(urlTo)) {
 			addNode(urlTo); //need to alter add node so it adds to transpose list
 		}
 		int urlFromNode = dictionary.get(urlFrom);
 		int urlToNode = dictionary.get(urlTo);
-		
+
 		if(!(adjList[urlFromNode].contains(urlToNode))) {
 			adjList[dictionary.get(urlFrom)].add(dictionary.get(urlTo));
 		}
-		
+
 		if(!(transposeList[urlToNode].contains(urlFromNode))) {
 		transposeList[dictionary.get(urlTo)].add(dictionary.get(urlFrom));
 		}
 	}
 	//ignore this method i just need it for a bit
 	public void printAdjList() {
-	
+
 		System.out.println("Adjacency List: ");
-		
+
 		for (int i = 0; i < dictionary.size(); i++) {
 			System.out.print("vertex " + i + ": ");
 			Iterator<Integer> it = adjList[i].iterator();
@@ -92,10 +102,10 @@ public class MyCITS2200Project implements CITS2200Project {
 				System.out.print(n + " ");
 			}
 			System.out.println();
-			
-			
+
+
 		}
-		
+
 		System.out.println("Transpose List: ");
 		for(int i = 0; i < dictionary.size(); i++) {
 			System.out.print("vertex " + i + ": ");
@@ -106,136 +116,180 @@ public class MyCITS2200Project implements CITS2200Project {
 			}
 			System.out.println();
 		}
-		
+
 		System.out.println("dictionary output: ");
 		for(String i : dictionary.keySet()) {
 			String key = i;
 			String value = dictionary.get(i).toString();
 			System.out.println("Key: "+ key + " Value: "+ value);
 		}
-	
+
+		System.out.println("intToString output: ");
+		for(int i : intToString.keySet()) {
+			int key = i;
+			String value = intToString.get(i);
+			System.out.println("Key: " + key + " Value: "+ value);
+		}
+
 	}
-	
+
 	@Override
 	public int getShortestPath(String urlFrom, String urlTo) {
 		// use breadth first search
 		int vertex1 = 0;
 		int vertex2 = 0;
-		list = new LinkedList<Integer>();
-		//int[] parentv = new int[dictionary.length];
-		boolean[] visited = new boolean[numNodes];
-		int[] distances = new int[numNodes];
-		
-		
-	//do we need to iterate? surely we can just do this?
 			if(dictionary.containsKey(urlFrom)) {
 				vertex1 = dictionary.get(urlFrom);
 			}
+
 			if(dictionary.containsKey(urlTo)) {
 				vertex2 = dictionary.get(urlTo);
 			}
 		// maybe have else case throwing an exception if it urlFrom and urlTo are not in the dictionary
-		
-		for(int i = 0; i < numNodes; i++) {//can also probably use arrays fill function instead of this
-			//parentv[i]= -1;//is parentv needed?
-			visited[i]= false;//not needed tbh
-			distances[i] = Integer.MAX_VALUE;
-		}
-	
-		visited[vertex1] = true;
-		distances[vertex1] = 0;
-		list.add(vertex1);
-		
-		while(!list.isEmpty()) {
-			Integer top = list.remove();
-			LinkedList<Integer> edges = adjList[top];
-			for(int i = 0; i < edges.size(); i++) {
-			int adjv = edges.get(i); //hmmm might need to iterate through list instead
-				if(!visited[adjv]) {
-					if(distances[top]+1 < distances[adjv]) {
-				    distances[adjv] = distances[top]+1;
-					//parentv[adjv] = top;
-					visited[adjv] = true;
-					list.add(adjv);
-					
-//					  if(i == vertex2){
-//					  return distances[vertex2];
-//					  }
-//					  does this makes sense?
-					 
-					}
-				}
-			}	
-		}
+
+		int[] distances = BFS(vertex1);
+
+
 		return distances[vertex2];
 	}
 
 	@Override
 	public String[] getCenters() {
-		// TODO Auto-generated method stub
-		return null;
+		int[] eccentricity = new int[numNodes]; // max shortest path for each vertex
+
+	for (int i = 0; i < numNodes; i++) {
+		int[] distances = BFS(i);
+		int k = 0;
+		while(distances[k] == Integer.MAX_VALUE) {
+			k++;
+		}
+		int max = distances[k];
+		for(int j =0; j<distances.length; j++) {
+			if(distances[j]>max && (distances[j] != Integer.MAX_VALUE)) {
+				max = distances[j];
+			}
+		}
+
+		eccentricity[i] = max; //set max shortest path for vertex i
+	}
+	//find min eccentricity
+
+	int min = eccentricity[0];
+	for (int i = 0; i < eccentricity.length; i++) {
+		if(eccentricity[i]<min) {
+			min = eccentricity[i];
+		}
 	}
 
+	//find centres with min eccentricity and add them to string array
+	List<String> centre = new ArrayList<>();
+	for(int i = 0; i <eccentricity.length; i++){
+		if(eccentricity[i] == min) {
+			centre.add(intToString.get(i));
+		}
+	}
+
+	 String[] centres = centre.toArray(new String[0]); // is this better than having two diff arrays?
+
+	return centres;
+	}
+
+	public int[] BFS(int vertex){
+		int[] distance = new int[numNodes];
+		list = new LinkedList<Integer>();
+		boolean[] visited = new boolean[numNodes];
+
+
+
+		for(int i = 0; i < numNodes; i++) {
+			visited[i]= false;
+			distance[i] = Integer.MAX_VALUE;
+		}
+
+
+		visited[vertex] = true;
+		distance[vertex] = 0;
+		list.add(vertex);
+
+		while(!list.isEmpty()) {
+			Integer top = list.remove();
+			LinkedList<Integer> edges = adjList[top];
+			for(int i = 0; i < edges.size(); i++) {
+			int adjv = edges.get(i);
+				if(!visited[adjv]) {
+					if(distance[top]+1 < distance[adjv]) {
+				    distance[adjv] = distance[top]+1;
+					visited[adjv] = true;
+					list.add(adjv);
+
+					}
+				}
+			}
+		}
+
+
+		return distance;
+	}
 	@Override
 	public String[][] getStronglyConnectedComponents() {
-		printAdjList();
+		//printAdjList();
 		int index = 0;
 		stack = new Stack<Integer>();
 		String[][] scc = new String[dictionary.size()][];
 		visited = new boolean[dictionary.size()]; // should default to false right?
-		
+
 		for(int i = 0; i < visited.length; i++) {
 			visited[i] = false;
 		}
-		
+
 		for (int i = 0; i < visited.length; i++) {
 			if(!visited[i]) {
 			DFS(0, visited, stack);
 			}
 		}
-		
+
 		//reset visited for transpose graph
 		for(int i = 0; i< visited.length; i++) {
 			visited[i] = false;
 		}
-		
+
 		while(!stack.empty()) {//maybe change to isempty
 			int top = stack.pop();
 			if(!visited[top]) {
-				
+
 				List<String> strongComponent = new ArrayList<String>();
-				
+
 				DFSreversal(top, visited, strongComponent);
 				String[] component = strongComponent.toArray(new String[0]); //apparently that argument makes things a lil faster
 			scc[index] = component;
 			index++;
 			}
-			
+
 		}
 		//ahahahhahahahahaahahahahah what the FUKC
-		
+
 		String[][] actualscc = new String[index][];
 		for (int i = 0; i < index; i++) {
 			actualscc[i] = scc[i];
 		}
-		
+
 		return actualscc;
 	}
-	
+
 	private void DFS(int vertex, boolean visit[], Stack<Integer> st) {
 		visit[vertex] = true;
-		
+
 		//look at adjacent vertices
 		LinkedList<Integer> edges = adjList[vertex];
 		Iterator<Integer> it = edges.iterator();
 
 		while(it.hasNext()) {
 			int adjv = it.next();
-		
+
 			if (!visit[adjv]) {
 				DFS(adjv, visit, st);
 			}
-			
+
 		}
 		stack.push(vertex);
 	}
@@ -243,73 +297,99 @@ public class MyCITS2200Project implements CITS2200Project {
 	private void DFSreversal(int vertex, boolean visited[], List<String> component) {
 		visited[vertex] = true;
 		component.add(intToString.get(vertex));
-		
+
 		Iterator<Integer> it = transposeList[vertex].iterator();
 		while(it.hasNext()) {
 			int adjv = it.next();
 			if(!visited[adjv]) {
 				DFSreversal(adjv, visited, component);
-				
+
 			}
 		}
-		
-	
+
+
 	}
-	
+
+	// We are using a hamiltonian cycle
 	public String[] getHamiltonianPath() {
-		return null; 
-	}
+		// Stack we will use to add all the nodes visited and then show our path
+		returnStack = new Stack<Integer>();
 
-	private boolean g(int currentNode, LinkedList<Integer> edges) {
-		return false;
-	}
-
-/**
-	@Override
-	public String[] getHamiltonianPath() {
-		// Run the recursive function
-		LinkedList<Integer> currentState = new LinkedList<Integer>();
-		currentState.add(0);
-		LinkedList<Integer> returnList = hamiltonianC(0, adjList[0], currentState);
-
-		System.out.println("Node Count: " + numNodes);
-		System.out.println("Return List Len: " + returnList.size());
-		if (returnList.size() == numNodes+1) {
-			String[] returnArray = new String[numNodes+1];
-			int i = 0;
-			while (!returnList.isEmpty()) {
-				returnArray[i] = intToString.get(returnList.pop());
-				i++;
+		// Initialising the array to store all of the bitmask states to -1
+		dp = new int[(1<<numNodes)][numNodes];
+		for (int i = 0; i < (1<<numNodes); i++) {
+			for (int j = 0; j < numNodes; j++) {
+				dp[i][j] = -1;
 			}
-			return returnArray;
 		}
-		return null;
+
+		String[] returnString = new String[numNodes+1];
+
+		// Setting the variable of the full bitmask, (essentially 11111... numNodes times)
+		visitedAll = (1<<numNodes)-1;
+
+		// Setting a default bitmask to start with, where we have just visited node 0
+		int visitedBitmask = 1;
+		int n = 0;
+
+		// Return null if there was not a cycle
+		if (p(0, adjList[0], 1)==0) {
+			return null;
+		}
+
+		// If there was no failure, iterate through the stack and add it to the returnString
+		while (!returnStack.isEmpty()) {
+			String currentStr = intToString.get(returnStack.pop());
+			System.out.println(currentStr);
+			returnString[n] = currentStr;
+			n++;
+		}
+		return returnString;
+
 	}
-	
-	private LinkedList<Integer> hamiltonianC(int currentNode, LinkedList<Integer> edges, LinkedList<Integer> currentState) {
+
+	private int p(int currentNode, LinkedList<Integer> edges, int visitedBitmask) {
+		// Check if a path exists from the current node to the visitedBitmask of nodes
+
+		// Have we visited all nodes
+		if (visitedBitmask==visitedAll) {
+			// If so does the final node link back to 0
+			if (adjList[currentNode].contains(0)) {
+				// Adding the final value and the 0 to represent to cycle
+				returnStack.add(0);
+				returnStack.add(currentNode);
+
+				return dp[currentNode][0];
+			} else {
+				return 0;
+			}
+		}
+
+		// If we have already done the calculation, then if that path is possible
+		if (dp[visitedBitmask][currentNode]!=-1) {
+			return dp[visitedBitmask][currentNode];
+		}
+
+		int ans = 1000;
+
+		// Check all the adjacent nodes
 		while (!edges.isEmpty()) {
+			// Grab one adjacent node
 			int nextNode = edges.pop();
-			if (!currentState.contains(nextNode)) {
-					LinkedList<Integer> nextEdges = adjList[nextNode];
-					currentState.add(nextNode);	
-					if (currentState.size() == numNodes) {
-						if (edges.contains(0)) {
-							currentState.add(0);
-							return currentState;
-						} else {
-							currentState.add(-1);
-							return currentState;
-						}
-					} else if(currentState.size() == numNodes+1) {
-						return currentState;
-					}
-					currentState = hamiltonianC(nextNode, nextEdges, currentState);	
+
+			// Check if that node has been visited
+			if ((visitedBitmask&(1<<nextNode))==0) {
+				// Check if a path exists from the children of our nextNode to the visitedBitmask plus the nextNode
+				int newAns = 1 + p(nextNode, adjList[nextNode],visitedBitmask|(1<<nextNode));
+				// The shortest path would be either the original path or our new path (that may now be one node deeper)
+				if (newAns < ans) {
+					returnStack.add(currentNode);
+				}
+				ans = Integer.min(newAns, ans);
+
 			}
 		}
-		return currentState;
+
+		return dp[visitedBitmask][currentNode] = ans;
 	}
-**/	
-	
-	
-	
 }

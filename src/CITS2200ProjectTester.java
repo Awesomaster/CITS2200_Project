@@ -27,23 +27,13 @@ public class CITS2200ProjectTester {
 	}
 	public static void testShortestPath(CITS2200Project project) {
 
-		//assertEquals(2,project.getShortestPath("/wiki/Flow_network","/wiki/Minimum_cut"));
+		assertEquals(2,project.getShortestPath("/wiki/Flow_network","/wiki/Minimum_cut"));
 
 	}
 
-	public static void main(String[] args) {
-		// Change this to be the path to the graph file.
-		String pathToGraphFile = "example_graph.txt";
-		String sccstuff = "sccgraph.txt";
-		// Create an instance of your implementation.
-		//CITS2200Project proj = new MyCITS2200Project(pathToGraphFile);
-		CITS2200Project proj = new MyCITS2200Project(sccstuff);
-		// Load the graph into the project.
-		//loadGraph(proj, pathToGraphFile);
-		//testShortestPath(proj);
-		loadGraph(proj, sccstuff);
+	public static void printSCC(CITS2200Project project) {
 
-		String[][] array = proj.getStronglyConnectedComponents();
+		String[][] array = project.getStronglyConnectedComponents();
 		for (int i = 0; i < array.length; i++) {
 			System.out.print("SCC " + (i+1) + ":");
 			for (int j = 0; j < array[i].length; j++) {
@@ -51,6 +41,39 @@ public class CITS2200ProjectTester {
 			}
 			System.out.println();
 		}
+	}
+
+	public static void printGetCentres(CITS2200Project project) {
+	String[] centres = project.getCenters();
+	System.out.println("Centres: ");
+	for(int i = 0; i < centres.length; i++) {
+		System.out.println(centres[i] + " ");
+	}
+	}
+
+	public static void main(String[] args) {
+		// Change this to be the path to the graph file.
+		String pathToGraphFile = "src/hamilton";
+		String sccstuff = "sccgraph.txt";
+		String mediumgraph = "medium_graph.txt";
+		// Create an instance of your implementation.
+		//CITS2200Project proj = new MyCITS2200Project(pathToGraphFile);
+		//CITS2200Project proj = new MyCITS2200Project(sccstuff);
+		CITS2200Project proj = new MyCITS2200Project(mediumgraph);
+		// Load the graph into the project.
+		//loadGraph(proj, pathToGraphFile);
+		loadGraph(proj,mediumgraph);
+		assertEquals(5,proj.getShortestPath("/wiki/Australia", "/wiki/United+Kingdom"));
+		printGetCentres(proj);
+		printSCC(proj);
+
+		//testShortestPath(proj);
+		//loadGraph(proj, sccstuff);
+		//printSCC(proj);
+		//printGetCentres(proj);
+
+		//proj.getHamiltonianPath();
+
 		/**String[] printStr = (proj.getHamiltonianPath());
 		if (printStr==null) {
 			System.out.println("heck");
@@ -59,7 +82,7 @@ public class CITS2200ProjectTester {
 				System.out.println(i);
 			}
 		}
-		**/
+**/
 		// Write your own tests!
 	}
 }
