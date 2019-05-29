@@ -30,9 +30,9 @@ public class CITS2200ProjectTester {
 		assertEquals(2,project.getShortestPath("/wiki/Flow_network","/wiki/Minimum_cut"));
 
 	}
-	
+
 	public static void printSCC(CITS2200Project project) {
-		
+
 		String[][] array = project.getStronglyConnectedComponents();
 		for (int i = 0; i < array.length; i++) {
 			System.out.print("SCC " + (i+1) + "(size" + array[i].length +") "  + ":");
@@ -51,7 +51,7 @@ public class CITS2200ProjectTester {
 		System.out.println(centres[i] + " ");
 	}
 	}
-	
+
 	public static void main(String[] args) {
 		// Change this to be the path to the graph file.
 		String pathToGraphFile = "example_graph.txt";
@@ -69,14 +69,14 @@ public class CITS2200ProjectTester {
 		assertEquals(5,proj.getShortestPath("/wiki/Australia", "/wiki/United+Kingdom"));
 		printGetCentres(proj);
 		printSCC(proj);
-		
+
 		//testShortestPath(proj);
 		//loadGraph(proj, dumb);
 		//printSCC(proj);
 		//printGetCentres(proj);
-		
+
 		//proj.getHamiltonianPath();
-		
+
 		/**String[] printStr = (proj.getHamiltonianPath());
 		if (printStr==null) {
 			System.out.println("heck");
