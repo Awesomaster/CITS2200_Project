@@ -244,9 +244,10 @@ public class MyCITS2200Project implements CITS2200Project {
 		
 		for (int i = 0; i < visited.length; i++) {
 			if(!visited[i]) {
-			DFS(0, visited, stack);
+			DFS(i, visited, stack);
 			}
 		}
+		
 		
 		//reset visited for transpose graph
 		for(int i = 0; i< visited.length; i++) {
