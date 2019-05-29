@@ -69,6 +69,7 @@ public class CITS2200ProjectTester {
 		assertEquals(5,proj.getShortestPath("/wiki/Australia", "/wiki/United+Kingdom"));
 		printGetCentres(proj);
 		printSCC(proj);
+		
 
 		//testShortestPath(proj);
 		//loadGraph(proj, dumb);
