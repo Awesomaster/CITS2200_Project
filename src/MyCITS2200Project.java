@@ -258,13 +258,12 @@ public class MyCITS2200Project implements CITS2200Project {
 	
 	public String[] getHamiltonianPath() {
 		return null; 
-
 	}
 
-	private boolean p(int currentNode, LinkedList<Integer> edges) {
-		
+	private boolean g(int currentNode, LinkedList<Integer> edges) {
+		return false;
 	}
-	
+
 /**
 	@Override
 	public String[] getHamiltonianPath() {
