@@ -349,8 +349,8 @@ public class MyCITS2200Project implements CITS2200Project {
 			returnString[n] = currentStr;
 			n++;
 		}
+		
 		return returnString;
-
 	}
 
 	/**
@@ -382,6 +382,7 @@ public class MyCITS2200Project implements CITS2200Project {
 			return dp[visitedBitmask][currentNode];
 		}
 
+		// Just a high value, doesn't need to be higher than 20 realistically because there will at no point be more than 20 nodes for this problem
 		int ans = 1000;
 
 		// Check all the adjacent nodes
