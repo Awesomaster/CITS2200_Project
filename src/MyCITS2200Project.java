@@ -1,3 +1,4 @@
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -311,10 +312,14 @@ public class MyCITS2200Project implements CITS2200Project {
 	}
 
 	// We are using a hamiltonian cycle
+	/**
+	 * getHamiltonianPath()
+	 * @return String[] returns an array of string, being the names of the nodes in the the order of the hamiltonian cycle
+	 */
 	public String[] getHamiltonianPath() {
 		// Stack we will use to add all the nodes visited and then show our path
 		returnStack = new Stack<Integer>();
-
+		
 		// Initialising the array to store all of the bitmask states to -1
 		dp = new int[(1<<numNodes)][numNodes];
 		for (int i = 0; i < (1<<numNodes); i++) {
@@ -348,6 +353,13 @@ public class MyCITS2200Project implements CITS2200Project {
 
 	}
 
+	/**
+	 * p(int currentNode, LinkedList<Integer> edges, int visitedBitmask)
+	 * @param currentNode The node that we are currenting looking at
+	 * @param edges The edges branching off the currentNode
+	 * @param visitedBitmask The currently visited nodes represented in a bitmask
+	 * @return int The lenght of the bitmask value from the currentNode to the origin
+	 */
 	private int p(int currentNode, LinkedList<Integer> edges, int visitedBitmask) {
 		// Check if a path exists from the current node to the visitedBitmask of nodes
 
