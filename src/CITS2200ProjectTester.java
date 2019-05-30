@@ -71,7 +71,12 @@ public class CITS2200ProjectTester {
 		printGetCentres(proj);
 		printSCC(proj);
 		
-
+		System.out.println("");
+		
+		MyCITS2200Project proj2 = new MyCITS2200Project(dumb);
+		proj2.setRandomGraph(1000, 0.001);
+		printGetCentres(proj2);
+		printSCC(proj2);
 		//testShortestPath(proj);
 		//loadGraph(proj, dumb);
 		//printSCC(proj);
