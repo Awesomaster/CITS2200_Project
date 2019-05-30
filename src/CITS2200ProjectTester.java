@@ -55,7 +55,7 @@ public class CITS2200ProjectTester {
 
 	public static void main(String[] args) {
 		// Change this to be the path to the graph file.
-		String pathToGraphFile = "example_graph.txt";
+		String pathToGraphFile = "src/example_graph2.txt";
 		String dumb = "dumbgraph.txt";
 		
 		String sccstuff = "sccgraph.txt";
@@ -63,20 +63,28 @@ public class CITS2200ProjectTester {
 		// Create an instance of your implementation.
 		//CITS2200Project proj = new MyCITS2200Project(pathToGraphFile);
 		//CITS2200Project proj = new MyCITS2200Project(dumb);
-		CITS2200Project proj = new MyCITS2200Project(mediumgraph);
+		//CITS2200Project proj = new MyCITS2200Project(mediumgraph);
 		// Load the graph into the project.
 		//loadGraph(proj, pathToGraphFile);
-		loadGraph(proj,mediumgraph);
+		//loadGraph(proj,pathToGraphFile);
 		//assertEquals(5,proj.getShortestPath("/wiki/Australia", "/wiki/United+Kingdom"));
-		printGetCentres(proj);
-		printSCC(proj);
+		
+		//printGetCentres(proj);
+		//printSCC(proj);
+		
 		
 		System.out.println("");
-		
 		MyCITS2200Project proj2 = new MyCITS2200Project(dumb);
-		proj2.setRandomGraph(1000, 0.001);
-		printGetCentres(proj2);
-		printSCC(proj2);
+		proj2.setRandomGraph(20, 0.5);
+		long start = System.currentTimeMillis();
+		//printGetCentres(proj2);
+		proj2.getHamiltonianPath();
+		long total = System.currentTimeMillis() - start;
+		System.out.println("Time in ms: " +  total);
+		//printSCC(proj2);
+		
+		
+		
 		//testShortestPath(proj);
 		//loadGraph(proj, dumb);
 		//printSCC(proj);

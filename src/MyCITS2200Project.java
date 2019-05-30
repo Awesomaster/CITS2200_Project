@@ -338,7 +338,6 @@ public class MyCITS2200Project implements CITS2200Project {
 		}
 
 		String[] returnString = new String[numNodes+1];
-
 		// Setting the variable of the full bitmask, (essentially 11111... numNodes times)
 		visitedAll = (1<<numNodes)-1;
 
@@ -347,7 +346,7 @@ public class MyCITS2200Project implements CITS2200Project {
 		int n = 0;
 
 		// Return null if there was not a cycle
-		if (p(0, adjList[0], 1)==0) {
+		if (p(0, adjList[0], visitedBitmask)==0) {
 			return null;
 		}
 
@@ -379,10 +378,9 @@ public class MyCITS2200Project implements CITS2200Project {
 				// Adding the final value and the 0 to represent to cycle
 				returnStack.add(0);
 				returnStack.add(currentNode);
-
 				return dp[currentNode][0];
 			} else {
-				return 0;
+				return 1000; // number greater than or equal to the default ans value
 			}
 		}
 
@@ -398,11 +396,11 @@ public class MyCITS2200Project implements CITS2200Project {
 		while (!edges.isEmpty()) {
 			// Grab one adjacent node
 			int nextNode = edges.pop();
-
 			// Check if that node has been visited
 			if ((visitedBitmask&(1<<nextNode))==0) {
 				// Check if a path exists from the children of our nextNode to the visitedBitmask plus the nextNode
-				int newAns = 1 + p(nextNode, adjList[nextNode],visitedBitmask|(1<<nextNode));
+				
+				int newAns = p(nextNode, adjList[nextNode],visitedBitmask|(1<<nextNode));
 				// The shortest path would be either the original path or our new path (that may now be one node deeper)
 				if (newAns < ans) {
 					returnStack.add(currentNode);
@@ -411,7 +409,7 @@ public class MyCITS2200Project implements CITS2200Project {
 
 			}
 		}
-
-		return dp[visitedBitmask][currentNode] = ans;
+		dp[visitedBitmask][currentNode] = ans;
+		return ans;
 	}
 }
