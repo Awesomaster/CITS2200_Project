@@ -62,11 +62,11 @@ public class CITS2200ProjectTester {
 		// Create an instance of your implementation.
 		//CITS2200Project proj = new MyCITS2200Project(pathToGraphFile);
 		//CITS2200Project proj = new MyCITS2200Project(dumb);
-		CITS2200Project proj = new MyCITS2200Project(mediumgraph);
+		CITS2200Project proj = new MyCITS2200Project(sccstuff);
 		// Load the graph into the project.
 		//loadGraph(proj, pathToGraphFile);
-		loadGraph(proj,mediumgraph);
-		assertEquals(5,proj.getShortestPath("/wiki/Australia", "/wiki/United+Kingdom"));
+		loadGraph(proj,sccstuff);
+		//assertEquals(5,proj.getShortestPath("/wiki/Australia", "/wiki/United+Kingdom"));
 		printGetCentres(proj);
 		printSCC(proj);
 		
