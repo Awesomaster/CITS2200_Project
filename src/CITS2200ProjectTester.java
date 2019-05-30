@@ -36,7 +36,8 @@ public class CITS2200ProjectTester {
 
 		String[][] array = project.getStronglyConnectedComponents();
 		for (int i = 0; i < array.length; i++) {
-			System.out.print("SCC " + (i+1) + ":");
+			System.out.print("SCC " + (i+1) + "(size" + array[i].length +") "  + ":");
+			
 			for (int j = 0; j < array[i].length; j++) {
 				System.out.print(array[i][j] + ", ");
 			}
@@ -54,12 +55,14 @@ public class CITS2200ProjectTester {
 
 	public static void main(String[] args) {
 		// Change this to be the path to the graph file.
-		String pathToGraphFile = "src/hamilton";
+		String pathToGraphFile = "example_graph.txt";
+		String dumb = "dumbgraph.txt";
+		
 		String sccstuff = "sccgraph.txt";
 		String mediumgraph = "src/medium_graph.txt";
 		// Create an instance of your implementation.
 		//CITS2200Project proj = new MyCITS2200Project(pathToGraphFile);
-		//CITS2200Project proj = new MyCITS2200Project(sccstuff);
+		//CITS2200Project proj = new MyCITS2200Project(dumb);
 		CITS2200Project proj = new MyCITS2200Project(mediumgraph);
 		// Load the graph into the project.
 		//loadGraph(proj, pathToGraphFile);
@@ -67,9 +70,10 @@ public class CITS2200ProjectTester {
 		//assertEquals(5,proj.getShortestPath("/wiki/Australia", "/wiki/United+Kingdom"));
 		printGetCentres(proj);
 		printSCC(proj);
+		
 
 		//testShortestPath(proj);
-		//loadGraph(proj, sccstuff);
+		//loadGraph(proj, dumb);
 		//printSCC(proj);
 		//printGetCentres(proj);
 
