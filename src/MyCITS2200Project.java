@@ -12,6 +12,7 @@ import CITS2200.Graph;
 
 public class MyCITS2200Project implements CITS2200Project {
 	int numNodes;
+	long timeOfLastMethod;
 
 	int visitedAll;
 	int[] path;
@@ -36,6 +37,10 @@ public class MyCITS2200Project implements CITS2200Project {
 		transposeList = new LinkedList[16];
 	}
 
+	public long getTime() {
+		return timeOfLastMethod;
+	}
+	
 	public void setRandomGraph(int nodes, double d) {
 		Graph g = Graph.randomGraph(nodes, d);
 		int[][] matrix = g.getEdgeMatrix();
@@ -145,6 +150,7 @@ public class MyCITS2200Project implements CITS2200Project {
 
 	@Override
 	public int getShortestPath(String urlFrom, String urlTo) {
+		long startTime = System.nanoTime();
 		// use breadth first search
 		int vertex1 = 0;
 		int vertex2 = 0;
@@ -159,46 +165,48 @@ public class MyCITS2200Project implements CITS2200Project {
 
 		int[] distances = BFS(vertex1);
 
-
+		timeOfLastMethod = System.nanoTime() - startTime;
 		return distances[vertex2];
 	}
 
 	@Override
 	public String[] getCenters() {
+		long startTime = System.nanoTime();
 		int[] eccentricity = new int[numNodes]; // max shortest path for each vertex
 
-	for (int i = 0; i < numNodes; i++) {
-		int[] distances = BFS(i);
-		
-		int max = distances[0];
-		for(int j =0; j<distances.length; j++) {
-			if(distances[j]>max) {
-				max = distances[j];
+		for (int i = 0; i < numNodes; i++) {
+			int[] distances = BFS(i);
+			
+			int max = distances[0];
+			for(int j =0; j<distances.length; j++) {
+				if(distances[j]>max) {
+					max = distances[j];
+				}
+			}
+	
+			eccentricity[i] = max; //set max shortest path for vertex i
+		}
+		//find min eccentricity
+	
+		int min = eccentricity[0];
+		for (int i = 0; i < eccentricity.length; i++) {
+			if(eccentricity[i]<min) {
+				min = eccentricity[i];
 			}
 		}
-
-		eccentricity[i] = max; //set max shortest path for vertex i
-	}
-	//find min eccentricity
-
-	int min = eccentricity[0];
-	for (int i = 0; i < eccentricity.length; i++) {
-		if(eccentricity[i]<min) {
-			min = eccentricity[i];
+	
+		//find centres with min eccentricity and add them to string array
+		List<String> centre = new ArrayList<>();
+		for(int i = 0; i <eccentricity.length; i++){
+			if(eccentricity[i] == min) {
+				centre.add(intToString.get(i));
+			}
 		}
-	}
-
-	//find centres with min eccentricity and add them to string array
-	List<String> centre = new ArrayList<>();
-	for(int i = 0; i <eccentricity.length; i++){
-		if(eccentricity[i] == min) {
-			centre.add(intToString.get(i));
-		}
-	}
-
-	 String[] centres = centre.toArray(new String[0]); // is this better than having two diff arrays?
-
-	return centres;
+	
+		String[] centres = centre.toArray(new String[0]); // is this better than having two diff arrays?
+	
+		timeOfLastMethod = System.nanoTime() - startTime;
+		return centres;
 	}
 
 	public int[] BFS(int vertex){
@@ -246,6 +254,7 @@ public class MyCITS2200Project implements CITS2200Project {
 	
 	@Override
 	public String[][] getStronglyConnectedComponents() {
+		long startTime = System.nanoTime();
 		//printAdjList();
 		int index = 0;
 		stack = new Stack<Integer>();
@@ -286,7 +295,7 @@ public class MyCITS2200Project implements CITS2200Project {
 		for (int i = 0; i < index; i++) {
 			actualscc[i] = scc[i];
 		}
-
+		timeOfLastMethod = System.nanoTime() - startTime;
 		return actualscc;
 	}
 
@@ -330,6 +339,8 @@ public class MyCITS2200Project implements CITS2200Project {
 	 * @return String[] returns an array of string, being the names of the nodes in the the order of the hamiltonian cycle
 	 */
 	public String[] getHamiltonianPath() {
+		long startTime = System.nanoTime();
+		
 		// Stack we will use to add all the nodes visited and then show our path
 		returnStack = new Stack<Integer>();
 		
@@ -361,7 +372,7 @@ public class MyCITS2200Project implements CITS2200Project {
 			returnString[n] = currentStr;
 			n++;
 		}
-		
+		timeOfLastMethod = System.nanoTime() - startTime;
 		return returnString;
 	}
 
