@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
+import CITS2200.Graph;
 
 public class MyCITS2200Project implements CITS2200Project {
 	int numNodes;
@@ -25,10 +26,6 @@ public class MyCITS2200Project implements CITS2200Project {
 	private Stack<Integer> stack;
 	private boolean[] visited;
 
-
-
-	//help me
-
 	// Constructor for CITS project
 	@SuppressWarnings("unchecked")
 	public MyCITS2200Project(String filename) {//why does this have input filename?? is it needed if the test progam will load the graph
@@ -39,6 +36,18 @@ public class MyCITS2200Project implements CITS2200Project {
 		transposeList = new LinkedList[16];
 	}
 
+	public void setRandomGraph(int nodes, double d) {
+		Graph g = Graph.randomGraph(nodes, d);
+		int[][] matrix = g.getEdgeMatrix();
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix.length; j++) {
+				if (matrix[i][j] == 1) {
+					addEdge(((Integer) i).toString(),((Integer) j).toString());
+				}
+			}
+		}
+	}
+	
 	private void addNode(String url) {
 		if (numNodes==adjList.length) {
 			// Could use System.arraycopy

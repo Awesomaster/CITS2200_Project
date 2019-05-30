@@ -1,6 +1,7 @@
-import java.io.*;
-import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
+import CITS2200.Graph;
+import java.io.BufferedReader;
+import java.io.FileReader;
 
 
 
@@ -58,19 +59,28 @@ public class CITS2200ProjectTester {
 		String dumb = "dumbgraph.txt";
 		
 		String sccstuff = "sccgraph.txt";
-		String mediumgraph = "medium_graph.txt";
+		String mediumgraph = "src/medium_graph.txt";
 		// Create an instance of your implementation.
 		//CITS2200Project proj = new MyCITS2200Project(pathToGraphFile);
 		//CITS2200Project proj = new MyCITS2200Project(dumb);
 		CITS2200Project proj = new MyCITS2200Project(sccstuff);
 		// Load the graph into the project.
 		//loadGraph(proj, pathToGraphFile);
+<<<<<<< HEAD
 		loadGraph(proj,sccstuff);
+=======
+		loadGraph(proj,mediumgraph);
+>>>>>>> 7e6c7fa366d8478de61f5fc77564899b75f00485
 		//assertEquals(5,proj.getShortestPath("/wiki/Australia", "/wiki/United+Kingdom"));
 		printGetCentres(proj);
 		printSCC(proj);
 		
-
+		System.out.println("");
+		
+		MyCITS2200Project proj2 = new MyCITS2200Project(dumb);
+		proj2.setRandomGraph(1000, 0.001);
+		printGetCentres(proj2);
+		printSCC(proj2);
 		//testShortestPath(proj);
 		//loadGraph(proj, dumb);
 		//printSCC(proj);
