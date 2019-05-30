@@ -169,13 +169,10 @@ public class MyCITS2200Project implements CITS2200Project {
 
 	for (int i = 0; i < numNodes; i++) {
 		int[] distances = BFS(i);
-		int k = 0;
-		while(distances[k] == Integer.MAX_VALUE) {
-			k++;
-		}
-		int max = distances[k];
+		
+		int max = distances[0];
 		for(int j =0; j<distances.length; j++) {
-			if(distances[j]>max && (distances[j] != Integer.MAX_VALUE)) {
+			if(distances[j]>max) {
 				max = distances[j];
 			}
 		}
@@ -236,10 +233,17 @@ public class MyCITS2200Project implements CITS2200Project {
 				}
 			}
 		}
-
+		
+	for(int i = 0; i < distance.length; i++) {
+		if(distance[i] == Integer.MAX_VALUE) {
+			distance[i] = -1;
+			}
+		}
 
 		return distance;
 	}
+	
+	
 	@Override
 	public String[][] getStronglyConnectedComponents() {
 		//printAdjList();

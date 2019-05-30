@@ -37,7 +37,7 @@ public class CITS2200ProjectTester {
 		String[][] array = project.getStronglyConnectedComponents();
 		for (int i = 0; i < array.length; i++) {
 			System.out.print("SCC " + (i+1) + "(size" + array[i].length +") "  + ":");
-			
+
 			for (int j = 0; j < array[i].length; j++) {
 				System.out.print(array[i][j] + ", ");
 			}
@@ -57,7 +57,7 @@ public class CITS2200ProjectTester {
 		// Change this to be the path to the graph file.
 		String pathToGraphFile = "src/example_graph2.txt";
 		String dumb = "dumbgraph.txt";
-		
+
 		String sccstuff = "sccgraph.txt";
 		String mediumgraph = "src/medium_graph.txt";
 		// Create an instance of your implementation.
@@ -68,11 +68,11 @@ public class CITS2200ProjectTester {
 		//loadGraph(proj, pathToGraphFile);
 		//loadGraph(proj,pathToGraphFile);
 		//assertEquals(5,proj.getShortestPath("/wiki/Australia", "/wiki/United+Kingdom"));
-		
+
 		//printGetCentres(proj);
 		//printSCC(proj);
-		
-		
+
+
 		System.out.println("");
 		MyCITS2200Project proj2 = new MyCITS2200Project(dumb);
 		proj2.setRandomGraph(20, 0.5);
@@ -82,9 +82,9 @@ public class CITS2200ProjectTester {
 		long total = System.currentTimeMillis() - start;
 		System.out.println("Time in ms: " +  total);
 		//printSCC(proj2);
-		
-		
-		
+
+
+
 		//testShortestPath(proj);
 		//loadGraph(proj, dumb);
 		//printSCC(proj);
