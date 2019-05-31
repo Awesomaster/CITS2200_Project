@@ -9,6 +9,11 @@ import java.util.Stack;
 // Only required for testing
 import CITS2200.Graph;
 
+/**
+ * Our CITS2200 Project for 2019
+ * @author Joshua Collier (22503577)
+ * @author Deepali Rajawat (22496421)
+ */
 public class MyCITS2200Project implements CITS2200Project {
 	int numNodes;
 	long timeOfLastMethod;
