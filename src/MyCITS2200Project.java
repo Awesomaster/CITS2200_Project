@@ -1,13 +1,12 @@
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.Set;
 import java.util.Stack;
+
+// Only required for testing
 import CITS2200.Graph;
 
 public class MyCITS2200Project implements CITS2200Project {
@@ -15,7 +14,6 @@ public class MyCITS2200Project implements CITS2200Project {
 	long timeOfLastMethod;
 
 	int visitedAll;
-	int[] path;
 	int[][] dp;
 	Stack<Integer> returnStack;
 
@@ -27,20 +25,33 @@ public class MyCITS2200Project implements CITS2200Project {
 	private Stack<Integer> stack;
 	private boolean[] visited;
 
-	// Constructor for CITS project
 	@SuppressWarnings("unchecked")
-	public MyCITS2200Project(String filename) {//why does this have input filename?? is it needed if the test progam will load the graph
+	/**
+	 * Constructor for CITS Project
+	 */
+	public MyCITS2200Project() {
 		numNodes = 0;
 		dictionary = new HashMap<String, Integer>();
 		intToString = new HashMap<Integer, String>();
 		adjList = new LinkedList[16];
 		transposeList = new LinkedList[16];
 	}
-
+	
+	// Only required for testing
+	/**
+	 * getTime() returns the time it took for the last method to run in nanoseconds
+	 * @return long time in nanoseconds it took for the last method to run
+	 */
 	public long getTime() {
 		return timeOfLastMethod;
 	}
 	
+	// Only required for testing
+	/**
+	 * setRandomGraph(int nodes, double d) uses the CITS2200 package to generate a random graph and allows us to use it for testing 
+	 * @param nodes Number of nodes you want
+	 * @param d Density of edges
+	 */
 	public void setRandomGraph(int nodes, double d) {
 		Graph g = Graph.randomGraph(nodes, d);
 		int[][] matrix = g.getEdgeMatrix();
@@ -53,9 +64,12 @@ public class MyCITS2200Project implements CITS2200Project {
 		}
 	}
 	
+	/**
+	 * addNode(String url) is called to by addEdge to add unknown nodes to the adjacency list and transposed list
+	 * @param url The name of the node you want to add
+	 */
 	private void addNode(String url) {
 		if (numNodes==adjList.length) {
-			// Could use System.arraycopy
 			@SuppressWarnings("unchecked")
 			LinkedList<Integer>[] tempAdjList = new LinkedList[adjList.length*2];
 			@SuppressWarnings("unchecked")
@@ -75,7 +89,7 @@ public class MyCITS2200Project implements CITS2200Project {
 			transposeList = temptranspose;
 		} else {
 			LinkedList<Integer> edges = new LinkedList<Integer>();
-			LinkedList<Integer> diffedges = new LinkedList<Integer>(); // this fixes it wtf
+			LinkedList<Integer> diffedges = new LinkedList<Integer>();
 			dictionary.put(url, numNodes);
 			intToString.put(numNodes, url);
 			adjList[numNodes] = edges;
@@ -85,13 +99,18 @@ public class MyCITS2200Project implements CITS2200Project {
 	}
 
 	@Override
+	/**
+	 * addEdge(String urlFrom, String urlTo) adds edge between the two nodes, and adds those nodes if they have not yet been added
+	 * @param urlFrom The node the edge is coming from
+	 * @param urlTo The node the edge is going to
+	 */
 	public void addEdge(String urlFrom, String urlTo) {
 		if (!dictionary.containsKey(urlFrom)) {
 			addNode(urlFrom);
 		}
 
 		if(!dictionary.containsKey(urlTo)) {
-			addNode(urlTo); //need to alter add node so it adds to transpose list
+			addNode(urlTo); 
 		}
 		int urlFromNode = dictionary.get(urlFrom);
 		int urlToNode = dictionary.get(urlTo);
@@ -104,65 +123,28 @@ public class MyCITS2200Project implements CITS2200Project {
 		transposeList[dictionary.get(urlTo)].add(dictionary.get(urlFrom));
 		}
 	}
-	//ignore this method i just need it for a bit
-	public void printAdjList() {
-
-		System.out.println("Adjacency List: ");
-
-		for (int i = 0; i < dictionary.size(); i++) {
-			System.out.print("vertex " + i + ": ");
-			Iterator<Integer> it = adjList[i].iterator();
-			while(it.hasNext()) {
-				int n = it.next();
-				System.out.print(n + " ");
-			}
-			System.out.println();
-
-
-		}
-
-		System.out.println("Transpose List: ");
-		for(int i = 0; i < dictionary.size(); i++) {
-			System.out.print("vertex " + i + ": ");
-			Iterator<Integer> myIt = transposeList[i].iterator();
-			while(myIt.hasNext()) {
-				int n = myIt.next();
-				System.out.print(n + " ");
-			}
-			System.out.println();
-		}
-
-		System.out.println("dictionary output: ");
-		for(String i : dictionary.keySet()) {
-			String key = i;
-			String value = dictionary.get(i).toString();
-			System.out.println("Key: "+ key + " Value: "+ value);
-		}
-
-		System.out.println("intToString output: ");
-		for(int i : intToString.keySet()) {
-			int key = i;
-			String value = intToString.get(i);
-			System.out.println("Key: " + key + " Value: "+ value);
-		}
-
-	}
 
 	@Override
+	/**
+	 * getShortestPath(String urlFrom, String urlTo) will return the shortest distance between two nodes
+	 * @param urlFrom The node you start at
+	 * @param urlTo The node you finish at
+	 * @return int The distance between the two nodes
+	 */
 	public int getShortestPath(String urlFrom, String urlTo) {
 		long startTime = System.nanoTime();
-		// use breadth first search
+		
+		// Use breadth first search
 		int vertex1 = 0;
 		int vertex2 = 0;
-			if(dictionary.containsKey(urlFrom)) {
-				vertex1 = dictionary.get(urlFrom);
-			}
+		if(dictionary.containsKey(urlFrom)) {
+			vertex1 = dictionary.get(urlFrom);
+		}
 
-			if(dictionary.containsKey(urlTo)) {
-				vertex2 = dictionary.get(urlTo);
-			}
-		// maybe have else case throwing an exception if it urlFrom and urlTo are not in the dictionary
-
+		if(dictionary.containsKey(urlTo)) {
+			vertex2 = dictionary.get(urlTo);
+		}
+		
 		int[] distances = BFS(vertex1);
 
 		timeOfLastMethod = System.nanoTime() - startTime;
@@ -170,6 +152,10 @@ public class MyCITS2200Project implements CITS2200Project {
 	}
 
 	@Override
+	/**
+	 * getCenters() returns the centres of the graph 
+	 * @return String[] A list of nodes that are centres of the graph
+	 */
 	public String[] getCenters() {
 		long startTime = System.nanoTime();
 		int[] eccentricity = new int[numNodes]; // max shortest path for each vertex
@@ -184,10 +170,10 @@ public class MyCITS2200Project implements CITS2200Project {
 				}
 			}
 	
-			eccentricity[i] = max; //set max shortest path for vertex i
+			eccentricity[i] = max; // Set max shortest path for vertex i
 		}
-		//find min eccentricity
-	
+		
+		// Find min eccentricity
 		int min = eccentricity[0];
 		for (int i = 0; i < eccentricity.length; i++) {
 			if(eccentricity[i]<min) {
@@ -195,7 +181,7 @@ public class MyCITS2200Project implements CITS2200Project {
 			}
 		}
 	
-		//find centres with min eccentricity and add them to string array
+		// Find centres with min eccentricity and add them to string array
 		List<String> centre = new ArrayList<>();
 		for(int i = 0; i <eccentricity.length; i++){
 			if(eccentricity[i] == min) {
@@ -203,24 +189,26 @@ public class MyCITS2200Project implements CITS2200Project {
 			}
 		}
 	
-		String[] centres = centre.toArray(new String[0]); // is this better than having two diff arrays?
+		String[] centres = centre.toArray(new String[0]); 
 	
 		timeOfLastMethod = System.nanoTime() - startTime;
 		return centres;
 	}
 
-	public int[] BFS(int vertex){
+	/**
+	 * BFS(int vertex) is a method that runs a breath first search algorithm on a particular node to find its distance from all other nodes
+	 * @param vertex Starting vertex
+	 * @return int[] Distance each node is from the starting vertex
+	 */
+	private int[] BFS(int vertex){
 		int[] distance = new int[numNodes];
 		list = new LinkedList<Integer>();
 		boolean[] visited = new boolean[numNodes];
-
-
 
 		for(int i = 0; i < numNodes; i++) {
 			visited[i]= false;
 			distance[i] = Integer.MAX_VALUE;
 		}
-
 
 		visited[vertex] = true;
 		distance[vertex] = 0;
@@ -236,16 +224,15 @@ public class MyCITS2200Project implements CITS2200Project {
 				    distance[adjv] = distance[top]+1;
 					visited[adjv] = true;
 					list.add(adjv);
-
 					}
 				}
 			}
 		}
 		
-	for(int i = 0; i < distance.length; i++) {
-		if(distance[i] == Integer.MAX_VALUE) {
-			distance[i] = -1;
-			}
+		for(int i = 0; i < distance.length; i++) {
+			if(distance[i] == Integer.MAX_VALUE) {
+				distance[i] = -1;
+				}
 		}
 
 		return distance;
@@ -253,13 +240,17 @@ public class MyCITS2200Project implements CITS2200Project {
 	
 	
 	@Override
+	/**
+	 * getStringlyConnectedComponents() returns a list of lists, each element of the String[] contains a list of nodes in a strongly connected subset
+	 * @return String[][] Returns the strongly connected component subsets 
+	 */
 	public String[][] getStronglyConnectedComponents() {
 		long startTime = System.nanoTime();
-		//printAdjList();
+
 		int index = 0;
 		stack = new Stack<Integer>();
 		String[][] scc = new String[dictionary.size()][];
-		visited = new boolean[dictionary.size()]; // should default to false right?
+		visited = new boolean[dictionary.size()]; 
 
 		for(int i = 0; i < visited.length; i++) {
 			visited[i] = false;
@@ -271,25 +262,24 @@ public class MyCITS2200Project implements CITS2200Project {
 			}
 		}
 
-		//reset visited for transpose graph
+		// Reset visited for transpose graph
 		for(int i = 0; i< visited.length; i++) {
 			visited[i] = false;
 		}
 
-		while(!stack.empty()) {//maybe change to isempty
+		while(!stack.empty()) {
 			int top = stack.pop();
 			if(!visited[top]) {
 
 				List<String> strongComponent = new ArrayList<String>();
 
 				DFSreversal(top, visited, strongComponent);
-				String[] component = strongComponent.toArray(new String[0]); //apparently that argument makes things a lil faster
+				String[] component = strongComponent.toArray(new String[0]); 
 			scc[index] = component;
 			index++;
 			}
 
 		}
-		//ahahahhahahahahaahahahahah what the FUKC
 
 		String[][] actualscc = new String[index][];
 		for (int i = 0; i < index; i++) {
@@ -299,10 +289,16 @@ public class MyCITS2200Project implements CITS2200Project {
 		return actualscc;
 	}
 
+	/**
+	 * DFS(int vertex, boolean visit[], Stack<Integer> st) 
+	 * @param vertex Vertex we are looking at
+	 * @param visit List of visited verticies
+	 * @param st Stack
+	 */
 	private void DFS(int vertex, boolean visit[], Stack<Integer> st) {
 		visit[vertex] = true;
 
-		//look at adjacent vertices
+		// Look at adjacent vertices
 		LinkedList<Integer> edges = adjList[vertex];
 		Iterator<Integer> it = edges.iterator();
 
@@ -317,15 +313,21 @@ public class MyCITS2200Project implements CITS2200Project {
 		stack.push(vertex);
 	}
 
-	private void DFSreversal(int vertex, boolean visited[], List<String> component) {
-		visited[vertex] = true;
+	/**
+	 * DFSreversal(int vertex, boolean visited[], List<String> component)
+	 * @param vertex Vertex we are looking at
+	 * @param visit The visited verticies
+	 * @param component List of verticies we have visited
+	 */
+	private void DFSreversal(int vertex, boolean visit[], List<String> component) {
+		visit[vertex] = true;
 		component.add(intToString.get(vertex));
 
 		Iterator<Integer> it = transposeList[vertex].iterator();
 		while(it.hasNext()) {
 			int adjv = it.next();
-			if(!visited[adjv]) {
-				DFSreversal(adjv, visited, component);
+			if(!visit[adjv]) {
+				DFSreversal(adjv, visit, component);
 
 			}
 		}
@@ -333,9 +335,8 @@ public class MyCITS2200Project implements CITS2200Project {
 
 	}
 
-	// We are using a hamiltonian cycle
 	/**
-	 * getHamiltonianPath()
+	 * getHamiltonianPath() returns a hamiltonian cycle of the graph if there is one starting and ending with the starting node, and null if there isnt
 	 * @return String[] returns an array of string, being the names of the nodes in the the order of the hamiltonian cycle
 	 */
 	public String[] getHamiltonianPath() {
@@ -368,7 +369,6 @@ public class MyCITS2200Project implements CITS2200Project {
 		// If there was no failure, iterate through the stack and add it to the returnString
 		while (!returnStack.isEmpty()) {
 			String currentStr = intToString.get(returnStack.pop());
-			System.out.println(currentStr);
 			returnString[n] = currentStr;
 			n++;
 		}

@@ -75,8 +75,8 @@ public class CITS2200ProjectTester {
 
 		System.out.println("");
 		MyCITS2200Project proj2 = new MyCITS2200Project(dumb);
-		proj2.setRandomGraph(25, 0.25);
-		proj2.getStronglyConnectedComponents();
+		proj2.setRandomGraph(20, 0.75);
+		proj2.getHamiltonianPath();
 		System.out.println("Time in ns: " +  proj2.getTime());
 		//printSCC(proj2);
 
